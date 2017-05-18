@@ -1,15 +1,9 @@
 # -*- coding: utf-8 -*-
-# Parameters Class:
-# 1) Holds simulation parameters
-# 2) Properties:
-#    
-# 3) Constructor:
-#    Syntax: self = Parameters()
-# 4) Author(s):
-#    Calil Queiroz;
-#    calil_queiroz@hotmail.com;
-# 6) Version History:
-#    V. 0.1 (May 18 2017) - create class skeleton
+"""
+Created on Thu May 18 11:34:15 2017
+
+@author: Calil
+"""
 
 class Parameters(object):
     """
