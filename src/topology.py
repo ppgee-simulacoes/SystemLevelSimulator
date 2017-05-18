@@ -12,7 +12,7 @@ class Topology(object):
         Properties:
             radius <1x1 float>: cell radius [meters]
             layers <1x1 int>: number of interference layers
-            height <1x1 float>: height of base stations [meters]
+            bs_height <1x1 float>: height of base stations [meters]
             
         Constructor:
             Syntax: self = Topology(radius,layers,bs_height)
