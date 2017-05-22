@@ -46,3 +46,12 @@ class Parameters(object):
     
     # Height of Base Stations [meters]
     bs_height = 10
+    
+    # Base Station azimuth angle [degrees]
+    bs_azimuth = [60, 180, 300]
+    
+    # Base Station down tilt angle [degrees]
+    bs_down_tilt = -10
+    
+    # Base Station transmit power [dBm]
+    bs_power = 40
