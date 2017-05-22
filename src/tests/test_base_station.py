@@ -10,23 +10,19 @@ import numpy.testing as npt
 import unittest
 
 from base_station import BaseStation
-from parameters import Parameters
 
 class BaseStationTest(unittest.TestCase):
     
     def setUp(self):
-        self.par = Parameters
-        self.par.bs_height = 10
-        self.par.bs_azimuth = [60, 180, 300]
-        self.par.bs_down_tilt = -10
-        self.par.bs_power = 40
-        
-        # Create BS
-        pos = np.array([100, 200, 300])
-        self.bs1 = BaseStation(pos,self.par.bs_azimuth[0],self.par)
+        # Create BS 1
+        pos = np.array([100, 200, 10])
+        azi = 60
+        tilt = -10
+        power = 40
+        self.bs1 = BaseStation(pos,azi,tilt,power)
         
     def test_position(self):
-        npt.assert_equal(self.bs1.position,np.array([100, 200, 300]))
+        npt.assert_equal(self.bs1.position,np.array([100, 200, 10]))
         
     def test_tx_power(self):
         self.assertEqual(self.bs1.tx_power,40)

@@ -7,8 +7,6 @@ Created on Mon May 22 14:56:23 2017
 
 import numpy as np
 
-from parameters import Parameters
-
 class BaseStation(object):
     """
         Base station of mobile communications system.
@@ -21,9 +19,11 @@ class BaseStation(object):
             ms_list <list>: list of connected mobile stations
             
         Constructor:
-            Syntax: self = BaseStation(position,azimuth,param)
+            Syntax: self = BaseStation(position,azimuth,tilt,power)
             Inputs: position <1x3 float>: xyz coordinates of BS position [meters]
-                    param <Parameters>: simulation parameters
+                    azimuth <1x1 float>: azimuth angle
+                    tilt <1x1 float>: mechanical antenna down tilt
+                    power <1x1 float>: maximum transmit power
                     
         Methods:
             
@@ -35,11 +35,11 @@ class BaseStation(object):
             V. 0.1 (May 22 2017) - create class
     """
     
-    def __init__(self,position,azimuth,param):
+    def __init__(self,position,azimuth,tilt,power):
         
         self.__position = position
-        self.__tx_power = param.bs_power
-        self.__down_tilt = param.bs_down_tilt
+        self.__tx_power = power
+        self.__down_tilt = tilt
         self.__azimuth = azimuth
         
         self.__ms_list = []
