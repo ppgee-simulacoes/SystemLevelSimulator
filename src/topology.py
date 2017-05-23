@@ -38,6 +38,7 @@ class Topology(object):
     def __init__(self,param):
         
         self.param = param
+        self.__bs_height = param.bs_height
         
         self.__r = param.cell_radius
         self.__num_layers = param.num_layers
@@ -57,12 +58,36 @@ class Topology(object):
         self.__num_bs = 2*self.num_bs
         self.__num_bs = self.__num_bs + self.__max_hex
         
-        self.__x = np.zeros(self.__num_bs)
-        self.__y = np.zeros(self.__num_bs)
+        self.__x = np.array([])
+        self.__y = np.array([])
         
     def set_base_stations(self):
         if(len(self.__bs_list) == 0):
-            pass
+            
+            max_x = np.floor(self.__max_hex/2) 
+            self.__x = 2*self.__h*np.arange(-max_x,max_x+1)
+            self.__y = np.zeros_like(self.__x)
+            
+            for k in range(self.__num_layers):
+                if(k%2==0):
+                    x_row = 2*self.__h*np.arange(-max_x,max_x+k) + self.__h
+                else:
+                    x_row = 2*self.__h*np.arange(-max_x,max_x+1)
+                y_row = (k+1)*(1.5*self.__r)*np.ones_like(x_row)
+                max_x = max_x - 1
+                
+                self.__x = np.append(self.__x,x_row)
+                self.__y = np.append(self.__y,y_row)
+                self.__x = np.append(self.__x,x_row)
+                self.__y = np.append(self.__y,-y_row)
+                
+            for k in range(len(self.__x)):
+                pos = np.array([self.__x[k], self.__y[k], self.__bs_height])
+                azi = 0.0
+                tilt = 0.0
+                power = 0.0
+                self.__bs_list.append(BaseStation(pos,azi,tilt,power))
+            
         return self.__bs_list    
     
     @property
