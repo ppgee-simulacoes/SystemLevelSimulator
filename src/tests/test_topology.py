@@ -34,10 +34,6 @@ class TopologyTest(unittest.TestCase):
         self.param.num_layers = 3
         self.topology_3 = Topology(self.param)
         
-        # Topology with three layers
-        self.param.num_layers = 4
-        self.topology_4 = Topology(self.param)
-        
     def test_r(self):
         self.assertEqual(self.topology_1.r,200)
         
@@ -110,7 +106,9 @@ class TopologyTest(unittest.TestCase):
         
         self.topology_2.set_base_stations()
         self.topology_2.plot_topology()
-
+        
+        self.topology_3.set_base_stations()
+        self.topology_3.plot_topology()
 
 if __name__ == '__main__':
     unittest.main()

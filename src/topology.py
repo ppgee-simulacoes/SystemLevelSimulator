@@ -70,14 +70,14 @@ class Topology(object):
             max_x = np.floor(self.__max_hex/2) 
             self.__x = 2*self.__h*np.arange(-max_x,max_x+1)
             self.__y = np.zeros_like(self.__x)
-            
-            for k in range(self.__num_layers):
+                      
+            for k in range(self.__num_layers): 
                 if(k%2==0):
-                    x_row = 2*self.__h*np.arange(-max_x,max_x+k) + self.__h
+                    x_row = 2*self.__h*np.arange(-max_x,max_x) + self.__h
+                    max_x = max_x - 1
                 else:
                     x_row = 2*self.__h*np.arange(-max_x,max_x+1)
                 y_row = (k+1)*(1.5*self.__r)*np.ones_like(x_row)
-                max_x = max_x - 1
                 
                 self.__x = np.append(self.__x,x_row)
                 self.__y = np.append(self.__y,y_row)
