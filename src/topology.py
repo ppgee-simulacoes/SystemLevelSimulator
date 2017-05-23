@@ -6,6 +6,9 @@ Created on Thu May 18 11:34:15 2017
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.patches import Polygon
+from matplotlib.collections import PatchCollection
 
 from base_station import BaseStation
 
@@ -23,7 +26,7 @@ class Topology(object):
             Inputs: param <Parameters>: simulation parameters
                     
         Methods:
-            get_base_stations:
+            set_base_stations:
                 Creates BS objects according to exagonal topology.
                 Syntax: bs_list = self.get_base_stations()
                 Outputs: bs_list <list>: list containing all the BS objects
@@ -83,12 +86,48 @@ class Topology(object):
                 
             for k in range(len(self.__x)):
                 pos = np.array([self.__x[k], self.__y[k], self.__bs_height])
+                # TODO: define azimuth and tilt angles
                 azi = 0.0
                 tilt = 0.0
-                power = 0.0
+                power = self.param.bs_power
                 self.__bs_list.append(BaseStation(pos,azi,tilt,power))
             
-        return self.__bs_list    
+        return self.__bs_list
+    
+    def plot_topology(self):
+        
+        fig, ax = plt.subplots()
+        
+        patches = []
+        hex_coord = np.array([[ self.__h, self.__r/2],
+                              [ 0.0     , self.__r  ],
+                              [-self.__h, self.__r/2],
+                              [-self.__h,-self.__r/2],
+                              [ 0.0,     -self.__r  ],
+                              [ self.__h,-self.__r/2]])
+        for k in range(self.__num_bs):
+            hx = np.copy(hex_coord)
+            hx[:,0] = hx[:,0] + self.__x[k]
+            hx[:,1] = hx[:,1] + self.__y[k]
+            poly = Polygon(hx,True)
+            patches.append(poly)
+        
+        p = PatchCollection(patches, cmap='Greys', alpha=1.0,\
+                            edgecolors='#000000')
+        colors = np.zeros(len(patches))
+        p.set_array(np.array(colors))
+        
+        ax.add_collection(p)
+                
+        ax.scatter(self.__x,self.__y)
+        
+        ax.set_xlabel("x axis [meters]")
+        ax.set_ylabel("y axis [meters]")
+        ax.set_xlim([np.min(self.__x)-self.__h,np.max(self.__x)+self.__h])
+        ax.set_ylim([np.min(self.__y)-self.__r,np.max(self.__y)+self.__r])
+        ax.xaxis.grid(True)
+        ax.yaxis.grid(True)
+        plt.show()
     
     @property
     def r(self):

@@ -30,6 +30,14 @@ class TopologyTest(unittest.TestCase):
         self.param.num_layers = 2
         self.topology_2 = Topology(self.param)
         
+        # Topology with three layers
+        self.param.num_layers = 3
+        self.topology_3 = Topology(self.param)
+        
+        # Topology with three layers
+        self.param.num_layers = 4
+        self.topology_4 = Topology(self.param)
+        
     def test_r(self):
         self.assertEqual(self.topology_1.r,200)
         
@@ -96,6 +104,13 @@ class TopologyTest(unittest.TestCase):
         npt.assert_allclose(bs_list[18].position,np.array([346.41, -600.0, 10.0]),\
                             atol=1e-2)
         
+    def test_plot_topology(self):
+        self.topology_1.set_base_stations()
+        self.topology_1.plot_topology()
+        
+        self.topology_2.set_base_stations()
+        self.topology_2.plot_topology()
+
 
 if __name__ == '__main__':
     unittest.main()
