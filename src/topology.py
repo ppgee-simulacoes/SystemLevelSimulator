@@ -96,7 +96,8 @@ class Topology(object):
     
     def plot_topology(self):
         
-        fig, ax = plt.subplots()
+        fig = plt.figure(figsize=(6,6))
+        ax = fig.add_subplot(111)
         
         patches = []
         hex_coord = np.array([[ self.__h, self.__r/2],
@@ -127,7 +128,8 @@ class Topology(object):
         ax.set_ylim([np.min(self.__y)-self.__r,np.max(self.__y)+self.__r])
         ax.xaxis.grid(True)
         ax.yaxis.grid(True)
-        plt.show()
+#        plt.show()
+        return ax
     
     @property
     def r(self):
