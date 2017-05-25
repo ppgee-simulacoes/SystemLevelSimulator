@@ -55,3 +55,6 @@ class Parameters(object):
     
     # Base Station transmit power [dBm]
     bs_power = 40
+    
+    # Total number of mobile stations
+    num_ms = 50

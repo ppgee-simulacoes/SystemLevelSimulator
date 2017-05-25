@@ -5,6 +5,8 @@ Created on Thu May 18 11:04:05 2017
 @author: Calil
 """
 
+from topology import Topology
+
 class SimulationThread(object):
     """
         Performs simulation thread, with multiple drops.
@@ -13,14 +15,15 @@ class SimulationThread(object):
             param <Parameters>: simulation parameters
             topology <Topology>: network toloplogy and BS positions
             bs_list <list>: list of all the BS objects
+            ms_list <list>: list of all MS objects
             
         Constructor:
             Syntax: self = SimulationThread(param)
             Inputs: param <Parameters>: simulation parameters
             
         Methods:
-            create_bs:
-                Uses topology to create BS objects and save them in bs_list
+            create_ms:
+                Uses topology to create MS objects and save them in ms_list
                 property.
                 
         Author: Calil Queiroz
@@ -31,8 +34,10 @@ class SimulationThread(object):
     """
     
     def __init__(self,param):
-        pass
+        
+        self.topology = Topology(param)
+        self.bs_list = self.topology.set_base_stations()
     
-    def create_bs(self):
+    def create_ms(self):
         pass
     
