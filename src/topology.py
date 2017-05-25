@@ -90,7 +90,7 @@ class Topology(object):
                 azi = 0.0
                 tilt = 0.0
                 power = self.param.bs_power
-                self.__bs_list.append(BaseStation(pos,azi,tilt,power))
+                self.__bs_list.append(BaseStation(pos,azi,tilt,power,k))
             
         return self.__bs_list
     

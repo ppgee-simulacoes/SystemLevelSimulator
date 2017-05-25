@@ -35,7 +35,9 @@ class BaseStation(object):
             V. 0.1 (May 22 2017) - create class
     """
     
-    def __init__(self,position,azimuth,tilt,power):
+    def __init__(self,position,azimuth,tilt,power,num):
+        
+        self.__idx = num
         
         self.__position = position
         self.__tx_power = power
@@ -63,3 +65,7 @@ class BaseStation(object):
     @property
     def ms_list(self):
         return self.__ms_list
+    
+    @property
+    def idx(self):
+        return self.__idx

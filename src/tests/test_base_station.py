@@ -19,7 +19,8 @@ class BaseStationTest(unittest.TestCase):
         azi = 60
         tilt = -10
         power = 40
-        self.bs1 = BaseStation(pos,azi,tilt,power)
+        idx = 5
+        self.bs1 = BaseStation(pos,azi,tilt,power,idx)
         
     def test_position(self):
         npt.assert_equal(self.bs1.position,np.array([100, 200, 10]))
@@ -35,6 +36,9 @@ class BaseStationTest(unittest.TestCase):
         
     def test_ms_list(self):
         self.assertEqual(len(self.bs1.ms_list),0)
+        
+    def test_idx(self):
+        self.assertEqual(self.bs1.idx,5)
 
 if __name__ == '__main__':
     unittest.main()
