@@ -48,6 +48,9 @@ class BaseStation(object):
         
         self.__ms_list = []
         
+    def connect_to(self,ms):
+        self.__ms_list.append(ms)
+        
     @property
     def position(self):
         return self.__position

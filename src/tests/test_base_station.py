@@ -10,6 +10,7 @@ import numpy.testing as npt
 import unittest
 
 from base_station import BaseStation
+from mobile_station import MobileStation
 
 class BaseStationTest(unittest.TestCase):
     
@@ -21,6 +22,24 @@ class BaseStationTest(unittest.TestCase):
         power = 40
         idx = 5
         self.bs1 = BaseStation(pos,azi,tilt,power,idx)
+        
+    def test_connect_to(self):
+        
+        pos = np.array([150, -200, 2])
+        power = 20
+        idx = 0
+        ms0 = MobileStation(pos,power,idx)
+        
+        self.bs1.connect_to(ms0)
+        self.assertEqual(len(self.bs1.ms_list),1)
+        self.assertEqual(self.bs1.ms_list[0].idx,0)
+        
+        idx = 1
+        ms1 = MobileStation(pos,power,idx)
+        self.bs1.connect_to(ms1)
+        self.assertEqual(len(self.bs1.ms_list),2)
+        self.assertEqual(self.bs1.ms_list[0].idx,0)
+        self.assertEqual(self.bs1.ms_list[1].idx,1)
         
     def test_position(self):
         npt.assert_equal(self.bs1.position,np.array([100, 200, 10]))
