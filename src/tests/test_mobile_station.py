@@ -29,6 +29,24 @@ class MobileStationTest(unittest.TestCase):
         
     def test_idx(self):
         self.assertEqual(self.ms1.idx,2)
+        
+    def test_connected_to(self):
+        self.assertEqual(self.ms1.connected_to,None)
+        
+        pos = np.array([100, 200, 10])
+        azi = 60
+        tilt = -10
+        power = 40
+        idx = 5
+        bs = BaseStation(pos,azi,tilt,power,idx)
+        self.ms1.connected_to = bs
+        
+        npt.assert_equal(self.ms1.connected_to.position,np.array([100, 200, 10]))
+        self.assertEqual(self.ms1.connected_to.tx_power,40)
+        self.assertEqual(self.ms1.connected_to.down_tilt,-10)
+        self.assertEqual(self.ms1.connected_to.azimuth,60)
+        self.assertEqual(self.ms1.connected_to.idx,5)
+        
 
 if __name__ == '__main__':
     unittest.main()
