@@ -38,6 +38,9 @@ class Parameters(object):
     ###########################################################################
     # SIMULATION PARAMETERS
     
+    # Simulation seeds
+    seeds = [1321]
+    
     # Radius of cell [meters]
     cell_radius = 200
     
@@ -58,3 +61,6 @@ class Parameters(object):
     
     # Total number of mobile stations
     num_ms = 50
+    
+    # Mobile station transmit power
+    ms_tx_power = 20

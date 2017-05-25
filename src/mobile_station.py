@@ -14,18 +14,16 @@ class MobileStation(object):
         Mobile station of mobile communications system.
         
         Properties:
-            position <1x3 np.array>: xyz coordinates of BS position [meters]
-            azimuth <1x1 float>: azimuth angle
-            down_tilt <1x1 float>: mechanical antenna down tilt
-            tx_power <1x1 float>: maximum transmit power
-            ms_list <list>: list of connected mobile stations
+            position <1x3 float>: xyz coordinates of BS position [meters]
+            power <1x1 float>: maximum transmit power
+            num <1x1 inf>: station index
+            connected_to <BaseStation>: base station to which MS is connected
             
         Constructor:
-            Syntax: self = BaseStation(position,azimuth,tilt,power)
+            Syntax: self = MobileStation(position,power,num)
             Inputs: position <1x3 float>: xyz coordinates of BS position [meters]
-                    azimuth <1x1 float>: azimuth angle
-                    tilt <1x1 float>: mechanical antenna down tilt
                     power <1x1 float>: maximum transmit power
+                    num <1x1 inf>: station index
                     
         Methods:
             
