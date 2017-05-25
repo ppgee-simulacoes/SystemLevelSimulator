@@ -64,3 +64,6 @@ class Parameters(object):
     
     # Mobile station transmit power
     ms_tx_power = 20
+    
+    # Height of mobile stations
+    ms_height = 1.5
