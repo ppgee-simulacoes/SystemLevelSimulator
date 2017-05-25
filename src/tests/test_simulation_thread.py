@@ -7,6 +7,7 @@ Created on Thu May 25 17:19:54 2017
 
 import unittest
 import matplotlib.pyplot as plt
+import numpy.testing as npt
 
 from simulation_thread import SimulationThread
 from parameters import Parameters
@@ -59,6 +60,15 @@ class SimulationThreadTest(unittest.TestCase):
         self.assertEqual(len(self.sim_thread_2.ms_list),2)
         self.assertEqual(len(self.sim_thread_2.x_ms),2)
         self.assertEqual(len(self.sim_thread_2.y_ms),2)
+        
+    def test_connect_ms_to_bs(self):
+        self.sim_thread_2.create_ms()
+        self.sim_thread_2.connect_ms_to_bs()
+        
+        self.assertEqual(self.sim_thread_2.ms_list[0].connected_to.idx,0)
+        self.assertEqual(self.sim_thread_2.ms_list[1].connected_to.idx,0)
+        self.assertEqual(self.sim_thread_2.bs_list[0].ms_list[0].idx,0)
+        self.assertEqual(self.sim_thread_2.bs_list[0].ms_list[1].idx,1)
         
     def test_plot_grid(self):
         self.sim_thread.create_ms()

@@ -73,6 +73,20 @@ class SimulationThread(object):
             pos = np.array([self.__x_ms[k], self.__y_ms[k], self.param.ms_height])
             self.__ms_list.append(MobileStation(pos,self.param.ms_tx_power,k))
             
+    def connect_ms_to_bs(self):
+        for ms in self.__ms_list:
+            min_dist = self.__grid_R
+            bs_to_connect = None
+            for bs in self.__bs_list:
+                p_vec = np.array([(ms.position[0]-bs.position[0]),\
+                                   ms.position[1]-bs.position[1]])
+                dist = np.sqrt(p_vec[0]**2 + p_vec[1]**2)
+                if(dist < min_dist):
+                    min_dist = dist
+                    bs_to_connect = bs
+            ms.connected_to = bs_to_connect
+            bs_to_connect.connect_to(ms)
+            
     def plot_grid(self):
         ax = self.topology.plot_topology()
         ax.scatter(self.__x_ms,self.__y_ms, s = 15)
