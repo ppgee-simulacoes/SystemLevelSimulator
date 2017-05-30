@@ -75,7 +75,7 @@ class SimulationThread(object):
             
     def connect_ms_to_bs(self):
         for ms in self.__ms_list:
-            min_dist = self.__grid_R
+            min_dist = np.inf
             bs_to_connect = None
             for bs in self.__bs_list:
                 p_vec = np.array([(ms.position[0]-bs.position[0]),\
