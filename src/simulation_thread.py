@@ -89,7 +89,7 @@ class SimulationThread(object):
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
-        ax.scatter(self.__x_ms,self.__y_ms, s = 15)
+        ax.scatter(self.__x_ms,self.__y_ms, s = 10,color='red')
         
         theta = np.linspace(0,2*np.pi,num=100)
         circle_x = self.__grid_R*np.cos(theta)

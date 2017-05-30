@@ -120,7 +120,7 @@ class Topology(object):
         
         ax.add_collection(p)
                 
-        ax.scatter(self.__x,self.__y)
+        ax.scatter(self.__x,self.__y,color='blue')
         
         ax.set_xlabel("x axis [meters]")
         ax.set_ylabel("y axis [meters]")
