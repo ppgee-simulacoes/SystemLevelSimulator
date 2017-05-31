@@ -35,7 +35,7 @@ class BaseStation(object):
             V. 0.1 (May 22 2017) - create class
     """
     
-    def __init__(self,position,azimuth,tilt,power):
+    def __init__(self, position, azimuth, tilt, power):
         
         self.__position = position
         self.__tx_power = power

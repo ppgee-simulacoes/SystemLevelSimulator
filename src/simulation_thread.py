@@ -30,9 +30,18 @@ class SimulationThread(object):
             V. 0.1 (May 18 2017) - create class skeleton  
     """
     
-    def __init__(self,param):
+    def __init__(self, param):
+
         pass
     
     def create_bs(self):
         pass
-    
+
+
+    # Distribute MSs method
+    # 1) Get number of mobile stations
+    # 2) Distribute mobile stations uniformly inside of square (cell radius)
+    #       If MS outside of circle, discard MS
+    #       Run until reach number of MSs
+    # 3) Return list of MSs with position
+

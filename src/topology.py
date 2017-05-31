@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
-from base_station import BaseStation
+from src.base_station import BaseStation
 
 class Topology(object):
     """
@@ -38,7 +38,7 @@ class Topology(object):
             V. 0.1 (May 18 2017) - create class skeleton 
     """
     
-    def __init__(self,param):
+    def __init__(self, param):
         
         self.param = param
         self.__bs_height = param.bs_height
@@ -90,10 +90,10 @@ class Topology(object):
                 azi = 0.0
                 tilt = 0.0
                 power = self.param.bs_power
-                self.__bs_list.append(BaseStation(pos,azi,tilt,power))
+                self.__bs_list.append(BaseStation(pos, azi, tilt, power))
             
         return self.__bs_list
-    
+
     def plot_topology(self):
         
         fig, ax = plt.subplots()

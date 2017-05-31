@@ -42,7 +42,7 @@ class Parameters(object):
     cell_radius = 200
     
     # Number of interference layers
-    num_layers = 1
+    num_layers = 2
     
     # Height of Base Stations [meters]
     bs_height = 10

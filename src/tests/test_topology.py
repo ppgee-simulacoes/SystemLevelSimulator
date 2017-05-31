@@ -9,13 +9,13 @@ import numpy as np
 import unittest
 import numpy.testing as npt
 
-from topology import Topology
-from parameters import Parameters
+from src.topology import Topology
+from src.parameters.parameters import Parameters
 
 class TopologyTest(unittest.TestCase):
     
     def setUp(self):
-        self.param = Parameters(0)
+        self.param = Parameters()
         self.param.cell_radius = 200
         self.param.num_layers = 1
         self.param.bs_height = 10
