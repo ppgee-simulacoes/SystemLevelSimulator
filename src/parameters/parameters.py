@@ -4,6 +4,8 @@ Created on Thu May 18 11:34:15 2017
 
 @author: Calil
 """
+from support.enumeration import SimType
+
 
 class Parameters(object):
     """
@@ -37,6 +39,12 @@ class Parameters(object):
     
     ###########################################################################
     # SIMULATION PARAMETERS
+
+    # Simulation Type (FIXED_SEEDS OR FIXED_CONF)
+    simulation_type = SimType.FIXED_SEEDS
+
+    # Simulation seeds
+    seeds = [1321]
     
     # Radius of cell [meters]
     cell_radius = 200
@@ -55,3 +63,12 @@ class Parameters(object):
     
     # Base Station transmit power [dBm]
     bs_power = 40
+    
+    # Total number of mobile stations
+    num_ms = 50
+    
+    # Mobile station transmit power
+    ms_tx_power = 20
+    
+    # Height of mobile stations
+    ms_height = 1.5

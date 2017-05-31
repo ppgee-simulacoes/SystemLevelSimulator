@@ -12,6 +12,7 @@ class BaseStation(object):
         Base station of mobile communications system.
         
         Properties:
+            idx <1x1 int>: base station index
             position <1x3 np.array>: xyz coordinates of BS position [meters]
             azimuth <1x1 float>: azimuth angle
             down_tilt <1x1 float>: mechanical antenna down tilt
@@ -19,11 +20,12 @@ class BaseStation(object):
             ms_list <list>: list of connected mobile stations
             
         Constructor:
-            Syntax: self = BaseStation(position,azimuth,tilt,power)
+            Syntax: self = BaseStation(position,azimuth,tilt,power,idx)
             Inputs: position <1x3 float>: xyz coordinates of BS position [meters]
                     azimuth <1x1 float>: azimuth angle
                     tilt <1x1 float>: mechanical antenna down tilt
                     power <1x1 float>: maximum transmit power
+                    idx <1x1 inf>: base station index
                     
         Methods:
             
@@ -34,15 +36,19 @@ class BaseStation(object):
         Version History:
             V. 0.1 (May 22 2017) - create class
     """
-    
-    def __init__(self, position, azimuth, tilt, power):
+
+    def __init__(self,position,azimuth,tilt,power,num):
         
+        self.__idx = num
         self.__position = position
         self.__tx_power = power
         self.__down_tilt = tilt
         self.__azimuth = azimuth
         
         self.__ms_list = []
+        
+    def connect_to(self,ms):
+        self.__ms_list.append(ms)
         
     @property
     def position(self):
@@ -63,3 +69,7 @@ class BaseStation(object):
     @property
     def ms_list(self):
         return self.__ms_list
+    
+    @property
+    def idx(self):
+        return self.__idx

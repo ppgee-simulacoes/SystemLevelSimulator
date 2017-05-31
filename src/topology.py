@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.collections import PatchCollection
 
-from src.base_station import BaseStation
+from base_station import BaseStation
 
 class Topology(object):
     """
@@ -90,13 +90,14 @@ class Topology(object):
                 azi = 0.0
                 tilt = 0.0
                 power = self.param.bs_power
-                self.__bs_list.append(BaseStation(pos, azi, tilt, power))
-            
+                self.__bs_list.append(BaseStation(pos,azi,tilt,power,k))
+
         return self.__bs_list
 
     def plot_topology(self):
         
-        fig, ax = plt.subplots()
+        fig = plt.figure(figsize=(6,6))
+        ax = fig.add_subplot(111)
         
         patches = []
         hex_coord = np.array([[ self.__h, self.__r/2],
@@ -119,7 +120,7 @@ class Topology(object):
         
         ax.add_collection(p)
                 
-        ax.scatter(self.__x,self.__y)
+        ax.scatter(self.__x,self.__y,color='blue')
         
         ax.set_xlabel("x axis [meters]")
         ax.set_ylabel("y axis [meters]")
@@ -127,7 +128,8 @@ class Topology(object):
         ax.set_ylim([np.min(self.__y)-self.__r,np.max(self.__y)+self.__r])
         ax.xaxis.grid(True)
         ax.yaxis.grid(True)
-        plt.show()
+#        plt.show()
+        return ax
     
     @property
     def r(self):

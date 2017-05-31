@@ -8,6 +8,7 @@ Created on Mon May 22 17:03:40 2017
 import numpy as np
 import unittest
 import numpy.testing as npt
+import matplotlib.pyplot as plt
 
 from src.topology import Topology
 from src.parameters.parameters import Parameters
@@ -102,13 +103,16 @@ class TopologyTest(unittest.TestCase):
         
     def test_plot_topology(self):
         self.topology_1.set_base_stations()
-        self.topology_1.plot_topology()
+        ax = self.topology_1.plot_topology()
+        plt.show(ax)
         
         self.topology_2.set_base_stations()
-        self.topology_2.plot_topology()
+        ax = self.topology_2.plot_topology()
+        plt.show(ax)
         
         self.topology_3.set_base_stations()
-        self.topology_3.plot_topology()
+        ax = self.topology_3.plot_topology()
+        plt.show(ax)
 
 if __name__ == '__main__':
     unittest.main()
