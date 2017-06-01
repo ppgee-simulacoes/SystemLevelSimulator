@@ -7,8 +7,10 @@ Created on Thu May 18 11:04:05 2017
 
 import numpy as np
 
+from support.enumeration import RandomSeeds
 from topology import Topology
 from mobile_station import MobileStation
+
 
 class SimulationThread(object):
     """
@@ -39,23 +41,34 @@ class SimulationThread(object):
     def __init__(self, param):
         
         self.param = param
-        
+
+        self.__seed = self.param.seed
+        self.__seed_set = self.param.seed_set
+        self.__random_states = self.initialize_random_states()
+
         self.__num_ms = param.num_ms
         
         self.topology = Topology(param)
         self.__bs_list = self.topology.set_base_stations()
         
         self.__ms_list = []
-        
-        self.__current_seed = self.param.seeds[0]
-        
-        self.__random = np.random.RandomState(self.__current_seed)
-        
+
         self.__grid_R = 0
         
         self.__x_ms = np.empty(self.__num_ms)
         self.__y_ms = np.empty(self.__num_ms)
-    
+
+    def initialize_random_states(self):
+
+        num_states = len(self.param.state_indexes)
+        random_states = []
+
+        for index in range(0, num_states):
+            state_seed = self.__seed_set[self.__seed + index]
+            random_states.append(np.random.RandomState(state_seed))
+
+        return random_states
+
     def create_ms(self):
         
         max_idx = np.argmax(self.topology.y)
@@ -63,8 +76,10 @@ class SimulationThread(object):
         x_max = self.topology.x[max_idx]
         
         self.__grid_R = np.sqrt(x_max**2 + y_max**2)
-        theta = self.__random.uniform(0,2*np.pi,self.__num_ms)
-        r = self.__grid_R * np.sqrt(self.__random.uniform(0,1,self.__num_ms))
+        theta = self.__random_states[RandomSeeds.MOBILE_POSITION.value].\
+            uniform(0, 2*np.pi, self.__num_ms)
+        r = self.__grid_R * np.sqrt(self.__random_states[RandomSeeds.MOBILE_POSITION.value].
+                                    uniform(0, 1, self.__num_ms))
         
         self.__x_ms = r*np.cos(theta)
         self.__y_ms = r*np.sin(theta)
@@ -101,7 +116,19 @@ class SimulationThread(object):
         ax.set_ylim([min(circle_y),max(circle_y)])
         
         return ax
-    
+
+    @property
+    def seed(self):
+        return self.__seed
+
+    @property
+    def seed_set(self):
+        return self.__seed_set
+
+    @property
+    def random_states(self):
+        return self.__random_states
+
     @property
     def num_ms(self):
         return self.__num_ms
@@ -115,14 +142,11 @@ class SimulationThread(object):
         return self.__ms_list
     
     @property
-    def current_seed(self):
-        return self.__current_seed
-    
-    @property
     def x_ms(self):
         return self.__x_ms
     
     @property
     def y_ms(self):
         return self.__y_ms
-    
+
+

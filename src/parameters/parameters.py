@@ -4,7 +4,8 @@ Created on Thu May 18 11:34:15 2017
 
 @author: Calil
 """
-from support.enumeration import SimType
+import numpy as np
+from support.enumeration import SimType, RandomSeeds
 
 
 class Parameters(object):
@@ -43,9 +44,17 @@ class Parameters(object):
     # Simulation Type (FIXED_SEEDS OR FIXED_CONF)
     simulation_type = SimType.FIXED_SEEDS
 
-    # Simulation seeds
-    seeds = [1321]
-    
+    # Maximum Number of Drops
+    max_num_drops = 10
+
+    # Set of seeds for Random States
+    set_size = 100000
+    seed_set = np.random.randint(1, 230522, set_size)
+    state_indexes = [RandomSeeds.MOBILE_POSITION.value]
+
+    # Simulation Seed
+    seed = np.random.randint(1, set_size)
+
     # Radius of cell [meters]
     cell_radius = 200
     
