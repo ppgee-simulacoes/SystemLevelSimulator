@@ -6,8 +6,8 @@ Created on Thu May 18 11:04:05 2017
 """
 
 import numpy as np
+import matplotlib.pyplot as plt
 
-from parameters.parameters import Parameters
 from support.enumeration import SimType, RandomSeeds
 from topology import Topology
 from mobile_station import MobileStation
@@ -61,6 +61,13 @@ class SimulationThread(object):
         self.__x_ms = np.empty(self.__num_ms)
         self.__y_ms = np.empty(self.__num_ms)
 
+    def simulate(self):
+
+        # Perform Loop
+        self.run_loop()
+
+        # Save results in future releases
+
     def run_loop(self):
 
         drop_number = 1
@@ -72,6 +79,7 @@ class SimulationThread(object):
                 self.create_ms()
                 self.connect_ms_to_bs()
                 self.plot_grid()
+                plt.show()
 
                 self.reset_state()
 
@@ -183,6 +191,3 @@ class SimulationThread(object):
     def y_ms(self):
         return self.__y_ms
 
-param = Parameters()
-thread = SimulationThread(param)
-thread.run_loop()
