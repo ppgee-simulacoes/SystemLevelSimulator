@@ -52,8 +52,8 @@ class Parameters(object):
     seed_set = np.random.randint(1, 230522, set_size)
     state_indexes = [RandomSeeds.MOBILE_POSITION.value]
 
-    # Simulation Seed
-    seed = np.random.randint(1, set_size)
+    # Simulation Seeds
+    seeds = np.random.randint(1, set_size, max_num_drops)
 
     # Radius of cell [meters]
     cell_radius = 200

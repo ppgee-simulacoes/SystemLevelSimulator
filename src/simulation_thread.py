@@ -7,7 +7,8 @@ Created on Thu May 18 11:04:05 2017
 
 import numpy as np
 
-from support.enumeration import RandomSeeds
+from parameters.parameters import Parameters
+from support.enumeration import SimType, RandomSeeds
 from topology import Topology
 from mobile_station import MobileStation
 
@@ -42,7 +43,9 @@ class SimulationThread(object):
         
         self.param = param
 
-        self.__seed = self.param.seed
+        self.__seed_count = 0
+
+        self.__seed = self.param.seeds[self.__seed_count]
         self.__seed_set = self.param.seed_set
         self.__random_states = self.initialize_random_states()
 
@@ -58,16 +61,27 @@ class SimulationThread(object):
         self.__x_ms = np.empty(self.__num_ms)
         self.__y_ms = np.empty(self.__num_ms)
 
-    def initialize_random_states(self):
+    def run_loop(self):
 
-        num_states = len(self.param.state_indexes)
-        random_states = []
+        drop_number = 1
+        if self.param.simulation_type is SimType.FIXED_SEEDS:
+            while drop_number <= self.param.max_num_drops:
+                # Print drop number to screen
+                print("Running drop number {}...".format(drop_number))
 
-        for index in range(0, num_states):
-            state_seed = self.__seed_set[self.__seed + index]
-            random_states.append(np.random.RandomState(state_seed))
+                self.create_ms()
+                self.connect_ms_to_bs()
+                self.plot_grid()
 
-        return random_states
+                self.reset_state()
+
+                drop_number += 1
+
+        elif self.param.simulation_type is SimType.FIXED_CONF:
+            return NotImplemented
+
+        else:
+            raise NameError('Unknown simulation type!')
 
     def create_ms(self):
         
@@ -117,6 +131,26 @@ class SimulationThread(object):
         
         return ax
 
+    def initialize_random_states(self):
+
+        num_states = len(self.param.state_indexes)
+        random_states = []
+
+        for index in range(0, num_states):
+            state_seed = self.__seed_set[self.__seed + index]
+            random_states.append(np.random.RandomState(state_seed))
+
+        return random_states
+
+    def reset_state(self):
+
+        self.__seed_count += 1
+
+        if self.__seed_count < len(self.param.seeds):
+            self.__seed = self.param.seeds[self.__seed_count]
+            self.__random_states = self.initialize_random_states()
+
+
     @property
     def seed(self):
         return self.__seed
@@ -149,4 +183,6 @@ class SimulationThread(object):
     def y_ms(self):
         return self.__y_ms
 
-
+param = Parameters()
+thread = SimulationThread(param)
+thread.run_loop()
