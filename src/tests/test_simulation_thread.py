@@ -10,12 +10,12 @@ import matplotlib.pyplot as plt
 import numpy.testing as npt
 
 from simulation_thread import SimulationThread
-from parameters import Parameters
+from parameters.parameters import Parameters
 
 class SimulationThreadTest(unittest.TestCase):
     
     def setUp(self):
-        self.param = Parameters(0)
+        self.param = Parameters()
         self.param.cell_radius = 200
         self.param.num_layers = 1
         self.param.bs_height = 10
@@ -48,7 +48,7 @@ class SimulationThreadTest(unittest.TestCase):
         self.assertEqual(len(self.sim_thread.ms_list),0)
         
     def test_current_seed(self):
-        self.assertEqual(self.sim_thread.current_seed,983)
+        self.assertEqual(self.sim_thread.seed,983)
         
     def test_create_ms(self):
         self.sim_thread.create_ms()
@@ -82,7 +82,3 @@ class SimulationThreadTest(unittest.TestCase):
 if __name__ == '__main__':
     unittest.main()
     
-#    suite = unittest.TestSuite()
-#    suite.addTest(SimulationThreadTest("test_plot_grid"))
-#    runner = unittest.TextTestRunner()
-#    runner.run(suite)

@@ -10,8 +10,8 @@ import unittest
 import numpy.testing as npt
 import matplotlib.pyplot as plt
 
-from src.topology import Topology
-from src.parameters.parameters import Parameters
+from topology import Topology
+from parameters.parameters import Parameters
 
 class TopologyTest(unittest.TestCase):
     
