@@ -6,6 +6,7 @@ Created on Thu May 18 11:04:05 2017
 """
 
 import numpy as np
+import itertools as itls
 import matplotlib.pyplot as plt
 
 from support.enumeration import SimType, RandomSeeds
@@ -60,6 +61,10 @@ class SimulationThread(object):
         
         self.__x_ms = np.empty(self.__num_ms)
         self.__y_ms = np.empty(self.__num_ms)
+        
+        self.__bs_ms_x = [[] for k in range(self.topology.num_bs)]
+        self.__bs_ms_y = [[] for k in range(self.topology.num_bs)]
+        self.__connected = False
 
     def simulate(self):
 
@@ -123,10 +128,19 @@ class SimulationThread(object):
                     bs_to_connect = bs
             ms.connected_to = bs_to_connect
             bs_to_connect.connect_to(ms)
+            self.__bs_ms_x[bs_to_connect.idx].append(ms.position[0])
+            self.__bs_ms_y[bs_to_connect.idx].append(ms.position[1])
+        self.__connected = True
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
-        ax.scatter(self.__x_ms,self.__y_ms, s = 10,color='red')
+        if(self.__connected):
+            colors = itls.cycle(['r', 'g', 'm', 'y', 'c', 'b', 'grey', 'orange', 'teal'])
+            for k in range(self.topology.num_bs):
+                clr = next(colors)
+                ax.scatter(self.__bs_ms_x[k],self.__bs_ms_y[k], s = 9, color=clr)
+        else:
+            ax.scatter(self.__x_ms,self.__y_ms, s = 9,color='red')
         
         theta = np.linspace(0,2*np.pi,num=100)
         circle_x = self.__grid_R*np.cos(theta)
@@ -190,4 +204,12 @@ class SimulationThread(object):
     @property
     def y_ms(self):
         return self.__y_ms
+    
+    @property
+    def bs_ms_x(self):
+        return self.__bs_ms_x
+    
+    @property
+    def bs_ms_y(self):
+        return self.__bs_ms_y
 

@@ -50,6 +50,10 @@ class SimulationThreadTest(unittest.TestCase):
     def test_current_seed(self):
         self.assertEqual(self.sim_thread.seed,983)
         
+    def test_bs_ms(self):
+        self.assertEqual(len(self.sim_thread.bs_ms_x),7)
+        self.assertEqual(len(self.sim_thread.bs_ms_y),7)
+        
     def test_create_ms(self):
         self.sim_thread.create_ms()
         self.assertEqual(len(self.sim_thread.ms_list),50)
@@ -75,10 +79,19 @@ class SimulationThreadTest(unittest.TestCase):
         ax = self.sim_thread.plot_grid()
         plt.show(ax)
         
+        self.sim_thread.connect_ms_to_bs()
+        ax = self.sim_thread.plot_grid()
+        plt.show(ax)
+        
         self.sim_thread_3.create_ms()
+        self.sim_thread_3.connect_ms_to_bs()
         ax = self.sim_thread_3.plot_grid()
         plt.show(ax)
         
 if __name__ == '__main__':
-    unittest.main()
+#    unittest.main()
     
+    suite = unittest.TestSuite()
+    suite.addTest(SimulationThreadTest("test_plot_grid"))
+    runner = unittest.TextTestRunner()
+    runner.run(suite)
