@@ -89,9 +89,9 @@ class SimulationThreadTest(unittest.TestCase):
         plt.show(ax)
         
 if __name__ == '__main__':
-#    unittest.main()
+    unittest.main()
     
-    suite = unittest.TestSuite()
-    suite.addTest(SimulationThreadTest("test_plot_grid"))
-    runner = unittest.TextTestRunner()
-    runner.run(suite)
+#    suite = unittest.TestSuite()
+#    suite.addTest(SimulationThreadTest("test_plot_grid"))
+#    runner = unittest.TextTestRunner()
+#    runner.run(suite)
