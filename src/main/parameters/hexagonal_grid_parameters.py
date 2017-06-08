@@ -4,7 +4,7 @@ Created on Thu May 24 21:56:15 2017
 @author: Guilherme
 """
 
-class TopologyParameters(object):
+class HexagonalGridParameters(object):
     """
     Generates simulation topology, calculating the position of the BSs.
 
@@ -34,6 +34,4 @@ class TopologyParameters(object):
 
     def __init__(self):
         self.layer_number = 2
-        self.base_station_height = 10
-        self.transmission_power = 100
 

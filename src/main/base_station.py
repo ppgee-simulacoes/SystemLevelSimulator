@@ -21,7 +21,7 @@ class BaseStation(object):
 
     Methods:
         get_base_stations:
-            Creates BS objects according to exagonal topology.
+            Creates BS objects according to hexagonal topology.
             Syntax: bs_list = self.get_base_stations()
             Outputs: bs_list <list>: list containing all the BS objects
 
@@ -36,7 +36,8 @@ class BaseStation(object):
         self.x_position = x_position
         self.y_position = y_position
         self.z_position = z_position
-        self.pointing_angle = bs_parameters.pointing_angle
+        self.tilt_angle = bs_parameters.tilt_angle
+        self.azymuth_angle = bs_parameters.azymuth_angle
         self.transmission_power = bs_parameters.transmission_power
         self.mobile_station_list = []
         self.height = bs_parameters.height

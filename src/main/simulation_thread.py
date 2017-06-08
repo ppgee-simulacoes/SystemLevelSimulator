@@ -33,7 +33,5 @@ class SimulationThread(object):
     def __init__(self, param):
         pass
 
+    def simulate(self):
 
-def
-    create_bs(self):
-    pass

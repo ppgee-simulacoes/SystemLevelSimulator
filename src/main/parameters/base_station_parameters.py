@@ -32,7 +32,8 @@ class BaseStationParameters(object):
 """
 
     def __init__(self):
-        self.pointing_angle = 0
+        self.tilt_angle = 0
+        self.azymuth_angle = 0
         self.transmission_power = 10
         self.height = 100
 

@@ -4,9 +4,9 @@ Created on Thu May 24 21:56:15 2017
 @author: Guilherme
 """
 
-from src.main.support.enumerations import TopologyModel
+from src.main.topology import Topology
 
-class Topology(object):
+class Hexagonal_Grid(Topology):
     """
     Generates simulation topology, calculating the position of the BSs.
 
@@ -33,7 +33,9 @@ class Topology(object):
         V. 0.1 (May 24 2017) - create class BaseStation 
 """
 
-    def __init__(self, topology_model):
 
-        self.topology_model = topology_model
+    def __init__(self, topology_model, hexagonal_param):
+
+        Topology.__init__(self, topology_model)
+        self.layer_number = hexagonal_param.layer_number
 
