@@ -45,7 +45,8 @@ class PropagationTest(unittest.TestCase):
         self.assertEqual(self.propagation_generic.alpha,2.5)
         
         self.assertEqual(self.propagation_free.model,PropagationModel.FREESPACE)
-        self.assertEqual(self.propagation_free.freq,700)
+        self.assertEqual(self.propagation_free.freq_mhz,700)
+        self.assertEqual(self.propagation_free.freq_ghz,0.7)
         
         self.assertEqual(self.propagation_okumura.model,PropagationModel.OKUMURA)
         self.assertEqual(self.propagation_okumura.hte,40)
@@ -56,8 +57,12 @@ class PropagationTest(unittest.TestCase):
         eps = 1e-3
         
         # Test generic model
-        d = 5
+        d = 5000
         self.assertAlmostEqual(self.propagation_generic.propagate(d),20.474,delta=eps)
+        
+        # Test free space model
+        d = 5000
+        self.assertAlmostEqual(self.propagation_free.propagate(d),103.321,delta=eps)
         
 if __name__ == '__main__':
     unittest.main()

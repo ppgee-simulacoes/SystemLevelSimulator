@@ -21,7 +21,8 @@ class Propagation(object):
         self.__alpha = param.loss_coef
         
         # Free space parameters
-        self.__freq = param.frequency
+        self.__freq_mhz = param.frequency
+        self.__freq_ghz = self.__freq_mhz/1000
         
         # Okumura-Hata/COST parameters
         self.__hte = param.bs_height
@@ -31,7 +32,11 @@ class Propagation(object):
         # Shadowing parameters
         self.__shadow_var = param.shadowing_variance
         
-    def propagate(self,d):
+    def propagate(self,dist):
+        
+        # Convert distance to Kilometers
+        d = dist/1000
+        
         if(self.__model == PropagationModel.GENERIC):
             pl = self._generic(d)
         elif(self.__model == PropagationModel.FREESPACE):
@@ -48,7 +53,8 @@ class Propagation(object):
         return pl
     
     def _free_space(self,d):
-        pass
+        pl = 20*np.log10(self.__freq_ghz) + 20*np.log10(d) + 92.44
+        return pl
     
     def _okumura(self,d):
         pass
@@ -70,8 +76,12 @@ class Propagation(object):
         return self.__alpha
     
     @property
-    def freq(self):
-        return self.__freq
+    def freq_mhz(self):
+        return self.__freq_mhz
+    
+    @property
+    def freq_ghz(self):
+        return self.__freq_ghz
     
     @property
     def hte(self):
