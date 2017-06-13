@@ -48,3 +48,56 @@ class RandomSeeds(Enum):
         if self.__class__ is other.__class__:
             return self.value == other.value
         return NotImplemented
+    
+class PropagationModel(Enum):
+    """
+        Possible propagation models used in the simulation
+        
+        Properties:
+            
+            GENERIC -- generic model
+            FREESPACE -- free space loss model
+            OKUMURA -- Okumura-Hata/COST model
+    
+            Author: Calil Queiroz
+                calil.queiroz@ieee.org
+                       
+            Version History:
+                V. 0.1 (Jun 13 2017) - class created   
+    """
+    
+    GENERIC = 0
+    FREESPACE = 1
+    OKUMURA = 2
+    
+    def __eq__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value == other.value
+        return NotImplemented
+    
+class OkumuraEnv(Enum):
+    """
+        Okumura-Hata/COST environment.
+        
+        Properties:
+            
+            URBAN -- urban environment
+            SUBURBAN -- suburban environment
+            RURAL -- rural environment
+    
+            Author: Calil Queiroz
+                calil.queiroz@ieee.org
+                       
+            Version History:
+                V. 0.1 (Jun 13 2017) - class created   
+    """
+    
+    URBAN = 0
+    SUBURBAN = 1
+    RURAL = 2
+    
+    def __eq__(self, other):
+        if self.__class__ is other.__class__:
+            return self.value == other.value
+        return NotImplemented
+    

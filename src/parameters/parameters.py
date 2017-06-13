@@ -5,7 +5,7 @@ Created on Thu May 18 11:34:15 2017
 @author: Calil
 """
 import numpy as np
-from support.enumeration import SimType, RandomSeeds
+from support.enumeration import SimType, RandomSeeds, PropagationModel, OkumuraEnv
 
 
 class Parameters(object):
@@ -62,7 +62,7 @@ class Parameters(object):
     num_layers = 2
     
     # Height of Base Stations [meters]
-    bs_height = 10
+    bs_height = 40
     
     # Base Station azimuth angle [degrees]
     bs_azimuth = [60, 180, 300]
@@ -81,3 +81,27 @@ class Parameters(object):
     
     # Height of mobile stations
     ms_height = 1.5
+    
+    # Propagation model
+    propagation_model = PropagationModel.GENERIC
+    
+    #General parameters
+    # Frequency [MHz]
+    frequency = 700
+    
+    # Generic model parameters
+    # Reference loss [dB]
+    ref_loss = 3
+    
+    # Reference distance [km]
+    ref_distance = 1
+    
+    # Loss coefficiet
+    loss_coef = 2.5
+    
+    # Okumura-Hata/COST parameters
+    # Environment type
+    okumura_env = OkumuraEnv.URBAN
+    
+    # Shadowing variance [dB]
+    shadowing_variance = 2
