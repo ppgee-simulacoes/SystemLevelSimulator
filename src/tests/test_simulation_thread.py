@@ -11,6 +11,7 @@ import numpy.testing as npt
 
 from simulation_thread import SimulationThread
 from parameters.parameters import Parameters
+from support.enumeration import PropagationModel
 
 class SimulationThreadTest(unittest.TestCase):
     
@@ -26,6 +27,12 @@ class SimulationThreadTest(unittest.TestCase):
         self.param.ms_height = 1.5
         self.param.ms_tx_power = 20
         self.param.seeds = [983]
+        
+        self.param.propagation_model = PropagationModel.GENERIC
+        self.param.ref_loss = 3
+        self.param.ref_distance = 1
+        self.param.loss_coef = 2.5
+        self.param.shadowing = False
         
         self.sim_thread = SimulationThread(self.param)
         

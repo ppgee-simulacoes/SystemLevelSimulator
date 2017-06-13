@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from support.enumeration import SimType, RandomSeeds
 from topology import Topology
 from mobile_station import MobileStation
-
+from propagation import Propagation
 
 class SimulationThread(object):
     """
@@ -54,6 +54,9 @@ class SimulationThread(object):
         
         self.topology = Topology(param)
         self.__bs_list = self.topology.set_base_stations()
+        
+        self.propagation = Propagation(param,\
+            self.__random_states[RandomSeeds.MOBILE_POSITION.value])
         
         self.__ms_list = []
 
@@ -117,14 +120,15 @@ class SimulationThread(object):
             
     def connect_ms_to_bs(self):
         for ms in self.__ms_list:
-            min_dist = np.inf
+            max_pow = -np.inf
             bs_to_connect = None
             for bs in self.__bs_list:
                 p_vec = np.array([(ms.position[0]-bs.position[0]),\
                                    ms.position[1]-bs.position[1]])
                 dist = np.sqrt(p_vec[0]**2 + p_vec[1]**2)
-                if(dist < min_dist):
-                    min_dist = dist
+                power = bs.tx_power - self.propagation.propagate(dist)
+                if(power > max_pow):
+                    max_pow = power
                     bs_to_connect = bs
             ms.connected_to = bs_to_connect
             bs_to_connect.connect_to(ms)
@@ -171,6 +175,8 @@ class SimulationThread(object):
         if self.__seed_count < len(self.param.seeds):
             self.__seed = self.param.seeds[self.__seed_count]
             self.__random_states = self.initialize_random_states()
+            
+        self.propagation.rand_state = self.__random_states[RandomSeeds.MOBILE_POSITION.value]
 
 
     @property
