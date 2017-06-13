@@ -5,13 +5,13 @@ Created on Tue Jun 13 14:15:55 2017
 @author: Calil
 """
 
-from numpy import log10
+from numpy import log10, sqrt
 
 from support.enumeration import PropagationModel, OkumuraEnv
 
 class Propagation(object):
     
-    def __init__(self,param):
+    def __init__(self,param,rand_state):
         
         self.__model = param.propagation_model
         
@@ -30,7 +30,10 @@ class Propagation(object):
         self.__env = param.okumura_env
         
         # Shadowing parameters
+        self.__shadow_flag = param.shadowing
         self.__shadow_var = param.shadowing_variance
+        
+        self.rand_state = rand_state
         
     def propagate(self,dist):
         
@@ -46,7 +49,13 @@ class Propagation(object):
         else:
             raise NameError('Unknown propagation model!')
             
-        return pl
+        return pl + self._shadowing()
+    
+    def _shadowing(self):
+        if(self.__shadow_flag):
+            return self.rand_state.normal(0,sqrt(self.__shadow_var),1)
+        else:
+            return 0.0
         
     def _generic(self,d):
         pl = self.__pl_d0 + 10*self.__alpha*log10(d/self.__d0)
@@ -125,4 +134,8 @@ class Propagation(object):
     @property
     def shadow_var(self):
         return self.__shadow_var
+    
+    @property
+    def shadow_flag(self):
+        return self.__shadow_flag
         

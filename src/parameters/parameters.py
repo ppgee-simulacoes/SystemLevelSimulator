@@ -103,5 +103,8 @@ class Parameters(object):
     # Environment type
     okumura_env = OkumuraEnv.SMALL_URBAN
     
+    # Shadowing flag
+    shadowing = False
+    
     # Shadowing variance [dB]
     shadowing_variance = 2

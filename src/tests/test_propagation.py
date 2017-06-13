@@ -6,6 +6,7 @@ Created on Tue Jun 13 14:48:06 2017
 """
 
 import unittest
+from numpy.random import RandomState
 
 from propagation import Propagation
 from parameters.parameters import Parameters
@@ -16,6 +17,9 @@ class PropagationTest(unittest.TestCase):
     
     def setUp(self):
         self.param = Parameters()
+        self.state = RandomState(5)
+        
+        self.param.shadowing = False
         
         self.param.ref_loss = 3
         self.param.ref_distance = 1
@@ -29,38 +33,43 @@ class PropagationTest(unittest.TestCase):
         self.param.shadowing_variance = 6
         
         self.param.propagation_model = PropagationModel.GENERIC
-        self.propagation_generic = Propagation(self.param)
+        self.propagation_generic = Propagation(self.param,self.state)
+        
+        self.param.shadowing = True
+        self.propagation_shadow = Propagation(self.param,self.state)
+        self.param.shadowing = False
         
         self.param.propagation_model = PropagationModel.FREESPACE
-        self.propagation_free = Propagation(self.param)
+        self.propagation_free = Propagation(self.param,self.state)
         
         self.param.propagation_model = PropagationModel.OKUMURA
         self.param.okumura_env = OkumuraEnv.SMALL_URBAN
-        self.propagation_small = Propagation(self.param)
+        self.propagation_small = Propagation(self.param,self.state)
         
         self.param.propagation_model = PropagationModel.OKUMURA
         self.param.okumura_env = OkumuraEnv.LARGE_URBAN
         self.param.frequency = 700
-        self.propagation_large_1 = Propagation(self.param)
+        self.propagation_large_1 = Propagation(self.param,self.state)
         
         self.param.frequency = 200
-        self.propagation_large_2 = Propagation(self.param)
+        self.propagation_large_2 = Propagation(self.param,self.state)
         
         self.param.frequency = 1600
-        self.propagation_large_3 = Propagation(self.param)
+        self.propagation_large_3 = Propagation(self.param,self.state)
         
         self.param.frequency = 700
         self.param.okumura_env = OkumuraEnv.SUBURBAN
-        self.propagation_sub = Propagation(self.param)
+        self.propagation_sub = Propagation(self.param,self.state)
         
         self.param.okumura_env = OkumuraEnv.RURAL
-        self.propagation_rural = Propagation(self.param)
+        self.propagation_rural = Propagation(self.param,self.state)
         
     def test_parameters(self):
         self.assertEqual(self.propagation_generic.model,PropagationModel.GENERIC)
         self.assertEqual(self.propagation_generic.pl_d0,3)
         self.assertEqual(self.propagation_generic.d0,1)
         self.assertEqual(self.propagation_generic.alpha,2.5)
+        self.assertFalse(self.propagation_generic.shadow_flag)
         
         self.assertEqual(self.propagation_free.model,PropagationModel.FREESPACE)
         self.assertEqual(self.propagation_free.freq_mhz,700)
@@ -75,6 +84,15 @@ class PropagationTest(unittest.TestCase):
         self.assertEqual(self.propagation_large_1.hte,40)
         self.assertEqual(self.propagation_large_1.hre,1.5)
         self.assertEqual(self.propagation_large_1.env,OkumuraEnv.LARGE_URBAN)
+        
+    def test_shadowing(self):
+        eps = 1e-2
+        d = 5000
+        
+        # Test shadowing: since the shadowing loss is a random variable, this
+        # test only indicates changes in the variable value and cannot be used
+        # to dictate its correctness.
+        self.assertAlmostEqual(self.propagation_shadow.propagate(d),21.555,delta=eps)
         
     def test_propagate(self):
         eps = 1e-2
