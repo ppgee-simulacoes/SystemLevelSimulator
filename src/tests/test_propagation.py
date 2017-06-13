@@ -25,7 +25,6 @@ class PropagationTest(unittest.TestCase):
         
         self.param.bs_height = 40
         self.param.ms_height = 1.5
-        self.param.okumura_env = OkumuraEnv.URBAN
         
         self.param.shadowing_variance = 6
         
@@ -36,7 +35,26 @@ class PropagationTest(unittest.TestCase):
         self.propagation_free = Propagation(self.param)
         
         self.param.propagation_model = PropagationModel.OKUMURA
-        self.propagation_okumura = Propagation(self.param)
+        self.param.okumura_env = OkumuraEnv.SMALL_URBAN
+        self.propagation_small = Propagation(self.param)
+        
+        self.param.propagation_model = PropagationModel.OKUMURA
+        self.param.okumura_env = OkumuraEnv.LARGE_URBAN
+        self.param.frequency = 700
+        self.propagation_large_1 = Propagation(self.param)
+        
+        self.param.frequency = 200
+        self.propagation_large_2 = Propagation(self.param)
+        
+        self.param.frequency = 1600
+        self.propagation_large_3 = Propagation(self.param)
+        
+        self.param.frequency = 700
+        self.param.okumura_env = OkumuraEnv.SUBURBAN
+        self.propagation_sub = Propagation(self.param)
+        
+        self.param.okumura_env = OkumuraEnv.RURAL
+        self.propagation_rural = Propagation(self.param)
         
     def test_parameters(self):
         self.assertEqual(self.propagation_generic.model,PropagationModel.GENERIC)
@@ -48,21 +66,45 @@ class PropagationTest(unittest.TestCase):
         self.assertEqual(self.propagation_free.freq_mhz,700)
         self.assertEqual(self.propagation_free.freq_ghz,0.7)
         
-        self.assertEqual(self.propagation_okumura.model,PropagationModel.OKUMURA)
-        self.assertEqual(self.propagation_okumura.hte,40)
-        self.assertEqual(self.propagation_okumura.hre,1.5)
-        self.assertEqual(self.propagation_okumura.env,OkumuraEnv.URBAN)
+        self.assertEqual(self.propagation_small.model,PropagationModel.OKUMURA)
+        self.assertEqual(self.propagation_small.hte,40)
+        self.assertEqual(self.propagation_small.hre,1.5)
+        self.assertEqual(self.propagation_small.env,OkumuraEnv.SMALL_URBAN)
+        
+        self.assertEqual(self.propagation_large_1.model,PropagationModel.OKUMURA)
+        self.assertEqual(self.propagation_large_1.hte,40)
+        self.assertEqual(self.propagation_large_1.hre,1.5)
+        self.assertEqual(self.propagation_large_1.env,OkumuraEnv.LARGE_URBAN)
         
     def test_propagate(self):
-        eps = 1e-3
+        eps = 1e-2
+        d = 5000
         
         # Test generic model
-        d = 5000
         self.assertAlmostEqual(self.propagation_generic.propagate(d),20.474,delta=eps)
         
         # Test free space model
-        d = 5000
         self.assertAlmostEqual(self.propagation_free.propagate(d),103.321,delta=eps)
+        
+        # Okumura-Hata/COST test
+        # Small urban scenario
+        self.assertAlmostEqual(self.propagation_small.propagate(d),99.034,delta=eps)
+        
+        # Large urban scenario
+        # fc = 700 MHz
+        self.assertAlmostEqual(self.propagation_large_1.propagate(d),99.041,delta=eps)
+        
+        # fc = 200 MHz
+        self.assertAlmostEqual(self.propagation_large_2.propagate(d),84.572,delta=eps)
+        
+        # fc = 1600 MHz
+        self.assertAlmostEqual(self.propagation_large_3.propagate(d),159.827,delta=eps)
+        
+        # Suburban scenario
+        self.assertAlmostEqual(self.propagation_sub.propagate(d),89.726,delta=eps)
+        
+        # Rural scenario
+        self.assertAlmostEqual(self.propagation_rural.propagate(d),-32.789,delta=eps)
         
 if __name__ == '__main__':
     unittest.main()

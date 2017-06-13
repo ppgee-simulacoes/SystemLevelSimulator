@@ -5,7 +5,7 @@ Created on Tue Jun 13 14:15:55 2017
 @author: Calil
 """
 
-import numpy as np
+from numpy import log10
 
 from support.enumeration import PropagationModel, OkumuraEnv
 
@@ -49,15 +49,42 @@ class Propagation(object):
         return pl
         
     def _generic(self,d):
-        pl = self.__pl_d0 + 10*self.__alpha*np.log10(d/self.__d0)
+        pl = self.__pl_d0 + 10*self.__alpha*log10(d/self.__d0)
         return pl
     
     def _free_space(self,d):
-        pl = 20*np.log10(self.__freq_ghz) + 20*np.log10(d) + 92.44
+        pl = 20*log10(self.__freq_ghz) + 20*log10(d) + 92.44
         return pl
     
     def _okumura(self,d):
-        pass
+        if(self.__env == OkumuraEnv.LARGE_URBAN):
+            if(self.__freq_mhz <= 300):
+                a = 8.29*(log10(1.54*self.__hre)**2)-1.1
+            else:
+                a = 3.2*(log10(11.75*self.__hre))**2-4.97
+        else:
+            a = (1.1*log10(self.__freq_mhz) - 0.7)*self.__hre - \
+            (1.56*log10(self.__freq_mhz) - 0.8)
+        
+        if(self.__freq_mhz <= 1500):    
+            l_urb = 69.55 + 26.6*log10(self.__freq_mhz) - \
+            13.82*log10(self.__hte) - a - \
+            (44.9 - 6.55*log10(self.__hte))*log10(d)
+        elif(self.__freq_mhz <= 2000):
+            l_urb = 46.3 + 33.9*log10(self.__freq_mhz) - 13.82*log10(self.__hte) -\
+            a + (44.9 - 6.55*log10(self.__hte))*log10(d)
+            if(self.__env == OkumuraEnv.LARGE_URBAN):
+                l_urb = l_urb + 3
+        
+        if(self.__env == OkumuraEnv.SMALL_URBAN or self.__env == OkumuraEnv.LARGE_URBAN):
+            return l_urb
+        elif(self.__env == OkumuraEnv.SUBURBAN):
+            return l_urb - 2*(log10(self.__freq_mhz/28))**2 - 5.4
+        elif(self.__env == OkumuraEnv.RURAL):
+            return l_urb - 4.78*log10(self.__freq_mhz)**2 - \
+        18.33*log10(self.__freq_mhz) - 40.98
+        
+        raise NameError('No return on Okumura model!')
         
     @property
     def model(self):

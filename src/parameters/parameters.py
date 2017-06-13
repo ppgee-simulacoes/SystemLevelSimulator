@@ -101,7 +101,7 @@ class Parameters(object):
     
     # Okumura-Hata/COST parameters
     # Environment type
-    okumura_env = OkumuraEnv.URBAN
+    okumura_env = OkumuraEnv.SMALL_URBAN
     
     # Shadowing variance [dB]
     shadowing_variance = 2

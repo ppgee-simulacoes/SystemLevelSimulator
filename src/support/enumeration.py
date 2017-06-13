@@ -92,9 +92,10 @@ class OkumuraEnv(Enum):
                 V. 0.1 (Jun 13 2017) - class created   
     """
     
-    URBAN = 0
-    SUBURBAN = 1
-    RURAL = 2
+    SMALL_URBAN = 0
+    LARGE_URBAN = 1
+    SUBURBAN = 2
+    RURAL = 3
     
     def __eq__(self, other):
         if self.__class__ is other.__class__:
