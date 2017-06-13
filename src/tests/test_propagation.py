@@ -52,5 +52,12 @@ class PropagationTest(unittest.TestCase):
         self.assertEqual(self.propagation_okumura.hre,1.5)
         self.assertEqual(self.propagation_okumura.env,OkumuraEnv.URBAN)
         
+    def test_propagate(self):
+        eps = 1e-3
+        
+        # Test generic model
+        d = 5
+        self.assertAlmostEqual(self.propagation_generic.propagate(d),20.474,delta=eps)
+        
 if __name__ == '__main__':
     unittest.main()

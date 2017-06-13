@@ -5,6 +5,10 @@ Created on Tue Jun 13 14:15:55 2017
 @author: Calil
 """
 
+import numpy as np
+
+from support.enumeration import PropagationModel, OkumuraEnv
+
 class Propagation(object):
     
     def __init__(self,param):
@@ -26,6 +30,28 @@ class Propagation(object):
         
         # Shadowing parameters
         self.__shadow_var = param.shadowing_variance
+        
+    def propagate(self,d):
+        if(self.__model == PropagationModel.GENERIC):
+            pl = self._generic(d)
+        elif(self.__model == PropagationModel.FREESPACE):
+            pl = self._free_space(d)
+        elif(self.__model == PropagationModel.OKUMURA):
+            pl = self._okumura(d)
+        else:
+            raise NameError('Unknown propagation model!')
+            
+        return pl
+        
+    def _generic(self,d):
+        pl = self.__pl_d0 + 10*self.__alpha*np.log10(d/self.__d0)
+        return pl
+    
+    def _free_space(self,d):
+        pass
+    
+    def _okumura(self,d):
+        pass
         
     @property
     def model(self):
