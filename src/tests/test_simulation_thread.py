@@ -8,6 +8,7 @@ Created on Thu May 25 17:19:54 2017
 import unittest
 import matplotlib.pyplot as plt
 import numpy.testing as npt
+import numpy as np
 
 from simulation_thread import SimulationThread
 from parameters.parameters import Parameters
@@ -16,6 +17,9 @@ from support.enumeration import PropagationModel
 class SimulationThreadTest(unittest.TestCase):
     
     def setUp(self):
+        
+        self.plot_flag = True
+        
         self.param = Parameters()
         self.param.cell_radius = 200
         self.param.num_layers = 1
@@ -27,15 +31,19 @@ class SimulationThreadTest(unittest.TestCase):
         self.param.ms_height = 1.5
         self.param.ms_tx_power = 20
         self.param.seeds = [983]
+        self.param.max_num_drops = 2
         
-        self.param.propagation_model = PropagationModel.GENERIC
-        self.param.ref_loss = 3
-        self.param.ref_distance = 1
-        self.param.loss_coef = 2.5
+        self.param.propagation_model = PropagationModel.FREESPACE
+        self.param.frequency = 700
         self.param.shadowing = False
         
         self.sim_thread = SimulationThread(self.param)
         
+        self.param.shadowing = True
+        self.param.shadowing_variance = 20
+        self.sim_thread_shadow = SimulationThread(self.param)
+        
+        self.param.shadowing = False
         self.param.num_ms = 2
         self.param.num_layers = 0
         self.sim_thread_2 = SimulationThread(self.param)
@@ -61,6 +69,9 @@ class SimulationThreadTest(unittest.TestCase):
         self.assertEqual(len(self.sim_thread.bs_ms_x),7)
         self.assertEqual(len(self.sim_thread.bs_ms_y),7)
         
+    def test_bs_rx(self):
+        npt.assert_equal(self.sim_thread.bs_rx_power,np.zeros((7,50)))
+        
     def test_create_ms(self):
         self.sim_thread.create_ms()
         self.assertEqual(len(self.sim_thread.ms_list),50)
@@ -76,24 +87,42 @@ class SimulationThreadTest(unittest.TestCase):
         self.sim_thread_2.create_ms()
         self.sim_thread_2.connect_ms_to_bs()
         
+        npt.assert_equal(np.shape(self.sim_thread_2.bs_rx_power),(1,2))
+        self.assertTrue(np.all(self.sim_thread_2.bs_rx_power < \
+                               self.sim_thread_2.ms_list[0].tx_power))
+        
         self.assertEqual(self.sim_thread_2.ms_list[0].connected_to.idx,0)
         self.assertEqual(self.sim_thread_2.ms_list[1].connected_to.idx,0)
         self.assertEqual(self.sim_thread_2.bs_list[0].ms_list[0].idx,0)
         self.assertEqual(self.sim_thread_2.bs_list[0].ms_list[1].idx,1)
         
+        self.sim_thread_3.create_ms()
+        self.sim_thread_3.connect_ms_to_bs()
+        npt.assert_equal(np.shape(self.sim_thread_3.bs_rx_power),(19,200))
+        self.assertTrue(np.all(self.sim_thread_3.bs_rx_power < \
+                               self.sim_thread_3.ms_list[0].tx_power))
+        
     def test_plot_grid(self):
         self.sim_thread.create_ms()
         ax = self.sim_thread.plot_grid()
-        plt.show(ax)
+        if(self.plot_flag): plt.show(ax)
         
         self.sim_thread.connect_ms_to_bs()
         ax = self.sim_thread.plot_grid()
-        plt.show(ax)
+        if(self.plot_flag): plt.show(ax)
+               
+        self.sim_thread_shadow.create_ms()
+        self.sim_thread_shadow.connect_ms_to_bs()
+        ax = self.sim_thread_shadow.plot_grid()
+        if(self.plot_flag): plt.show(ax)
         
         self.sim_thread_3.create_ms()
         self.sim_thread_3.connect_ms_to_bs()
         ax = self.sim_thread_3.plot_grid()
-        plt.show(ax)
+        if(self.plot_flag): plt.show(ax)
+        
+    def test_simulate(self):
+        pass
         
 if __name__ == '__main__':
     unittest.main()

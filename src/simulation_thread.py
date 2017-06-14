@@ -49,14 +49,17 @@ class SimulationThread(object):
         self.__seed = self.param.seeds[self.__seed_count]
         self.__seed_set = self.param.seed_set
         self.__random_states = self.initialize_random_states()
-
-        self.__num_ms = param.num_ms
         
         self.topology = Topology(param)
         self.__bs_list = self.topology.set_base_stations()
         
+        self.__num_ms = param.num_ms
+        self.__num_bs = self.topology.num_bs
+        
         self.propagation = Propagation(param,\
             self.__random_states[RandomSeeds.MOBILE_POSITION.value])
+        
+        self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
         
         self.__ms_list = []
 
@@ -126,9 +129,12 @@ class SimulationThread(object):
                 p_vec = np.array([(ms.position[0]-bs.position[0]),\
                                    ms.position[1]-bs.position[1]])
                 dist = np.sqrt(p_vec[0]**2 + p_vec[1]**2)
-                power = bs.tx_power - self.propagation.propagate(dist)
-                if(power > max_pow):
-                    max_pow = power
+                path_loss = self.propagation.propagate(dist)
+                ms_rx_power = bs.tx_power - path_loss
+                bs_rx_power = ms.tx_power - path_loss
+                self.__bs_rx_power[bs.idx,ms.idx] = bs_rx_power
+                if(ms_rx_power > max_pow):
+                    max_pow = ms_rx_power
                     bs_to_connect = bs
             ms.connected_to = bs_to_connect
             bs_to_connect.connect_to(ms)
@@ -196,6 +202,10 @@ class SimulationThread(object):
         return self.__num_ms
     
     @property
+    def num_bs(self):
+        return self.__num_bs
+    
+    @property
     def bs_list(self):
         return self.__bs_list
     
@@ -218,4 +228,8 @@ class SimulationThread(object):
     @property
     def bs_ms_y(self):
         return self.__bs_ms_y
+    
+    @property
+    def bs_rx_power(self):
+        return self.__bs_rx_power
 
