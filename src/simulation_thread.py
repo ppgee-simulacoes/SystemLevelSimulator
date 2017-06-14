@@ -62,6 +62,8 @@ class SimulationThread(object):
         self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
         
         self.__ms_list = []
+        
+        self.__active_mss = []
 
         self.__grid_R = 0
         
@@ -141,6 +143,15 @@ class SimulationThread(object):
             self.__bs_ms_x[bs_to_connect.idx].append(ms.position[0])
             self.__bs_ms_y[bs_to_connect.idx].append(ms.position[1])
         self.__connected = True
+        
+    def select_mss(self):
+        for bs in self.__bs_list:
+            num_con_mss = len(bs.ms_list)
+            ue_idx = self.__random_states[RandomSeeds.MOBILE_POSITION.value].\
+            randint(0,high=num_con_mss)
+            bs.ms_list[ue_idx].active = True
+            self.__active_mss.append(ue_idx)
+            
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
@@ -232,4 +243,8 @@ class SimulationThread(object):
     @property
     def bs_rx_power(self):
         return self.__bs_rx_power
+    
+    @property
+    def active_mss(self):
+        return self.__active_mss
 

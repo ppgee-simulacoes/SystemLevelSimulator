@@ -18,7 +18,7 @@ class SimulationThreadTest(unittest.TestCase):
     
     def setUp(self):
         
-        self.plot_flag = True
+        self.plot_flag = False
         
         self.param = Parameters()
         self.param.cell_radius = 200
@@ -101,6 +101,19 @@ class SimulationThreadTest(unittest.TestCase):
         npt.assert_equal(np.shape(self.sim_thread_3.bs_rx_power),(19,200))
         self.assertTrue(np.all(self.sim_thread_3.bs_rx_power < \
                                self.sim_thread_3.ms_list[0].tx_power))
+        
+    def test_select_mss(self):
+        self.sim_thread_2.create_ms()
+        self.sim_thread_2.connect_ms_to_bs()
+        self.sim_thread_2.select_mss()
+        
+        self.assertEqual(len(self.sim_thread_2.active_mss),1)
+        
+        self.sim_thread_3.create_ms()
+        self.sim_thread_3.connect_ms_to_bs()
+        self.sim_thread_3.select_mss()
+        
+        self.assertEqual(len(self.sim_thread_3.active_mss),19)
         
     def test_plot_grid(self):
         self.sim_thread.create_ms()

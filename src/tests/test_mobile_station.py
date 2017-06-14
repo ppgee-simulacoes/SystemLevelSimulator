@@ -30,6 +30,9 @@ class MobileStationTest(unittest.TestCase):
     def test_idx(self):
         self.assertEqual(self.ms1.idx,2)
         
+    def test_active(self):
+        self.assertFalse(self.ms1.active)
+        
     def test_connected_to(self):
         self.assertEqual(self.ms1.connected_to,None)
         

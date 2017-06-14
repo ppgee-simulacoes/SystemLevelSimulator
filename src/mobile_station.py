@@ -42,6 +42,7 @@ class MobileStation(object):
         self.__position = position
         self.__tx_power = power
         
+        self.active = False
         self.__connected_to = None
         
     @property
