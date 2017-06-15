@@ -63,7 +63,7 @@ class SimulationThread(object):
         
         self.__ms_list = []
         
-        self.__active_mss = []
+        self.__active_mss_idx = []
 
         self.__grid_R = 0
         
@@ -150,8 +150,19 @@ class SimulationThread(object):
             ue_idx = self.__random_states[RandomSeeds.MOBILE_POSITION.value].\
             randint(0,high=num_con_mss)
             bs.ms_list[ue_idx].active = True
-            self.__active_mss.append(ue_idx)
+            self.__active_mss_idx.append(bs.ms_list[ue_idx].idx)
             
+    def calculate_snir(self):
+        
+        snir_vec = np.zeros(self.__num_bs)
+        
+        for bs in self.__bs_list:
+            rx_pow = self.__bs_rx_power[bs.idx,self.__active_mss_idx[bs.idx]]
+            int_n = np.sum(10**(self.__bs_rx_power[bs.idx,self.__active_mss_idx]/10))\
+            - 10**(rx_pow/10) + 10**(bs.noise/10)
+            snir_vec[bs.idx] = rx_pow - 10*np.log10(int_n)
+            
+        return snir_vec
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
@@ -245,6 +256,6 @@ class SimulationThread(object):
         return self.__bs_rx_power
     
     @property
-    def active_mss(self):
-        return self.__active_mss
+    def active_mss_idx(self):
+        return self.__active_mss_idx
 

@@ -30,8 +30,9 @@ class SimulationThreadTest(unittest.TestCase):
         self.param.num_ms = 50
         self.param.ms_height = 1.5
         self.param.ms_tx_power = 20
-        self.param.seeds = [983]
-        self.param.max_num_drops = 2
+        self.param.seed_set = np.array([1])
+        self.param.max_num_drops = 1
+        self.param.seeds = [0]
         
         self.param.propagation_model = PropagationModel.FREESPACE
         self.param.frequency = 700
@@ -63,7 +64,7 @@ class SimulationThreadTest(unittest.TestCase):
         self.assertEqual(len(self.sim_thread.ms_list),0)
         
     def test_current_seed(self):
-        self.assertEqual(self.sim_thread.seed,983)
+        self.assertEqual(self.sim_thread.seed,0)
         
     def test_bs_ms(self):
         self.assertEqual(len(self.sim_thread.bs_ms_x),7)
@@ -102,18 +103,20 @@ class SimulationThreadTest(unittest.TestCase):
         self.assertTrue(np.all(self.sim_thread_3.bs_rx_power < \
                                self.sim_thread_3.ms_list[0].tx_power))
         
-    def test_select_mss(self):
+    def test_select_mss_snir(self):
         self.sim_thread_2.create_ms()
         self.sim_thread_2.connect_ms_to_bs()
         self.sim_thread_2.select_mss()
         
-        self.assertEqual(len(self.sim_thread_2.active_mss),1)
+        self.assertEqual(len(self.sim_thread_2.active_mss_idx),1)
+        self.assertAlmostEqual(self.sim_thread_2.calculate_snir(),29.832,delta=1e-2)
         
         self.sim_thread_3.create_ms()
         self.sim_thread_3.connect_ms_to_bs()
         self.sim_thread_3.select_mss()
         
-        self.assertEqual(len(self.sim_thread_3.active_mss),19)
+        self.assertEqual(len(self.sim_thread_3.active_mss_idx),19)
+        self.assertEqual(len(self.sim_thread_3.calculate_snir()),19)
         
     def test_plot_grid(self):
         self.sim_thread.create_ms()
