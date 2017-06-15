@@ -18,13 +18,13 @@ class BaseStation(object):
             down_tilt <1x1 float>: mechanical antenna down tilt
             tx_power <1x1 float>: maximum transmit power
             ms_list <list>: list of connected mobile stations
+            noise <float>: base station noise power
             
         Constructor:
-            Syntax: self = BaseStation(position,azimuth,tilt,power,idx)
-            Inputs: position <1x3 float>: xyz coordinates of BS position [meters]
+            Syntax: self = BaseStation(,param,position,azimuth,num)
+            Inputs: param <Parameters>: simulation parameters
+                    position <1x3 float>: xyz coordinates of BS position [meters]
                     azimuth <1x1 float>: azimuth angle
-                    tilt <1x1 float>: mechanical antenna down tilt
-                    power <1x1 float>: maximum transmit power
                     idx <1x1 inf>: base station index
                     
         Methods:
@@ -35,6 +35,7 @@ class BaseStation(object):
                 
         Version History:
             V. 0.1 (May 22 2017) - create class
+            V. 1.0 (Jun 15 2017) - add noise
     """
 
     def __init__(self,param,position,azimuth,num):
