@@ -10,6 +10,42 @@ from numpy import log10, sqrt
 from support.enumeration import PropagationModel, OkumuraEnv
 
 class Propagation(object):
+    """
+        Calculates propagation losses.
+        
+        Properties:
+            model <PopagationModel>: type of propagation model 
+                (generic, free space of okumura-hata/COST)
+            pl_d0 <float>: reference loss
+            d0 <float>: reference distance
+            alpha <float>: power loss coefficient
+            freq_mhz <float>: frequency in MHz
+            freq_ghz <float>: frequency in GHz
+            hte <float>: BS height
+            hre <float>: MS height
+            env <OkumuraEnv>: Okumura-Hata/COST environment
+            shadow_flag <Bool>: shadowing indicator flag
+            shadow_var <float>: shadowing variance
+            rand_state <RandomState>: random number generator
+            
+        Constructor:
+            Syntax: self = Results(param,rand_state)
+            Inputs: param <Parameters>: simulation parameters
+                    rand_state <RandomState>: random number generator
+            
+        Methods:
+            propagate: 
+                Calculates path loss for given distance
+                Syntax: path_loss = self.propagate(dist)
+                Inputs: dist <float>: distance [meters]
+                Outputs: path_loss <float>: path loss [dB]
+                
+        Author: Calil Queiroz
+                calil_queiroz@hotmail.com
+                
+        Version History:
+            V. 0.1 (Jun 13 2017) - create class 
+    """
     
     def __init__(self,param,rand_state):
         
