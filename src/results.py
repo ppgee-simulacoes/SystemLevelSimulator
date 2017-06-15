@@ -9,6 +9,27 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Results(object):
+    """
+        Saves simulation results and plots CDFs.
+        
+        Properties:
+            snir <list>: simulation SNIR values
+            
+        Constructor:
+            Syntax: self = Results()
+            
+        Methods:
+            add_snir:
+                Store SNIR values for future ploting.
+                Syntax: self.add_snir(snir_vec)
+                Inputs: snir_vec <np.array>: vector containing SNIR values
+                
+        Author: Calil Queiroz
+                calil_queiroz@hotmail.com
+                
+        Version History:
+            V. 0.1 (Jun 15 2017) - create class 
+    """
     
     def __init__(self):
         
