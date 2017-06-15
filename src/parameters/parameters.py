@@ -45,7 +45,7 @@ class Parameters(object):
     simulation_type = SimType.FIXED_SEEDS
 
     # Maximum Number of Drops
-    max_num_drops = 10
+    max_num_drops = 100
 
     # Set of seeds for Random States
     set_size = 100000
@@ -56,7 +56,7 @@ class Parameters(object):
     seeds = np.random.randint(1, set_size, max_num_drops)
     
     # Plot grid for each drop
-    plot_drop_grid = True
+    plot_drop_grid = False
 
     # Radius of cell [meters]
     cell_radius = 200

@@ -164,14 +164,17 @@ class SimulationThread(object):
     def calculate_snir(self):
         
         snir_vec = np.zeros(self.__num_bs)
+        active_bss = []
         
         for bs in self.__bs_list:
-            rx_pow = self.__bs_rx_power[bs.idx,self.__active_mss_idx[bs.idx]]
-            int_n = np.sum(10**(self.__bs_rx_power[bs.idx,self.__active_mss_idx]/10))\
-            - 10**(rx_pow/10) + 10**(bs.noise/10)
-            snir_vec[bs.idx] = rx_pow - 10*np.log10(int_n)
+            if(len(bs.ms_list) > 0):
+                active_bss.append(bs.idx)
+                rx_pow = self.__bs_rx_power[bs.idx,self.__active_mss_idx[bs.idx]]
+                int_n = np.sum(10**(self.__bs_rx_power[bs.idx,self.__active_mss_idx]/10))\
+                - 10**(rx_pow/10) + 10**(bs.noise/10)
+                snir_vec[bs.idx] = rx_pow - 10*np.log10(int_n)
             
-        return snir_vec
+        return snir_vec[active_bss]
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
