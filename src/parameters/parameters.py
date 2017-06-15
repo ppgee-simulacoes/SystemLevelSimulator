@@ -73,6 +73,12 @@ class Parameters(object):
     # Base Station transmit power [dBm]
     bs_power = 40
     
+    # Base Station noise spectral density [dBm/Hz]
+    bs_n0 = -150
+    
+    # Base Station transmit bandwidth [MHz]
+    bs_band = 10
+    
     # Total number of mobile stations
     num_ms = 50
     

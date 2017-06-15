@@ -9,6 +9,7 @@ import numpy as np
 import numpy.testing as npt
 import unittest
 
+from parameters.parameters import Parameters
 from base_station import BaseStation
 from mobile_station import MobileStation
 
@@ -16,12 +17,15 @@ class BaseStationTest(unittest.TestCase):
     
     def setUp(self):
         # Create BS 1
-        pos = np.array([100, 200, 10])
+        self.param = Parameters()
+        self.param.bs_down_tilt = -10
+        self.param.bs_power = 40
+        self.param.bs_n0 = -200
+        self.param.bs_band = 10
         azi = 60
-        tilt = -10
-        power = 40
+        pos = np.array([100, 200, 10])
         idx = 5
-        self.bs1 = BaseStation(pos,azi,tilt,power,idx)
+        self.bs1 = BaseStation(self.param,pos,azi,idx)
         
     def test_connect_to(self):
         
@@ -58,6 +62,9 @@ class BaseStationTest(unittest.TestCase):
         
     def test_idx(self):
         self.assertEqual(self.bs1.idx,5)
+        
+    def test_noise(self):
+        self.assertEqual(self.bs1.noise,-130.0)
 
 if __name__ == '__main__':
     unittest.main()

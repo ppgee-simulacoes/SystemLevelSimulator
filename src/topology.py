@@ -88,9 +88,7 @@ class Topology(object):
                 pos = np.array([self.__x[k], self.__y[k], self.__bs_height])
                 # TODO: define azimuth and tilt angles
                 azi = 0.0
-                tilt = 0.0
-                power = self.param.bs_power
-                self.__bs_list.append(BaseStation(pos,azi,tilt,power,k))
+                self.__bs_list.append(BaseStation(self.param,pos,azi,k))
 
         return self.__bs_list
 

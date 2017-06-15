@@ -5,7 +5,7 @@ Created on Mon May 22 14:56:23 2017
 @author: Calil
 """
 
-import numpy as np
+from numpy import log10
 
 class BaseStation(object):
     """
@@ -37,12 +37,14 @@ class BaseStation(object):
             V. 0.1 (May 22 2017) - create class
     """
 
-    def __init__(self,position,azimuth,tilt,power,num):
+    def __init__(self,param,position,azimuth,num):
         
         self.__idx = num
         self.__position = position
-        self.__tx_power = power
-        self.__down_tilt = tilt
+        self.__tx_power = param.bs_power
+        self.__down_tilt = param.bs_down_tilt
+        lin_n0 = 10**(param.bs_n0/10)
+        self.__noise = 10*log10(param.bs_band*1e6*lin_n0)
         self.__azimuth = azimuth
         
         self.__ms_list = []
@@ -73,3 +75,7 @@ class BaseStation(object):
     @property
     def idx(self):
         return self.__idx
+    
+    @property
+    def noise(self):
+        return self.__noise
