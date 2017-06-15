@@ -13,6 +13,7 @@ from support.enumeration import SimType, RandomSeeds
 from topology import Topology
 from mobile_station import MobileStation
 from propagation import Propagation
+from results import Results
 
 class SimulationThread(object):
     """
@@ -58,6 +59,7 @@ class SimulationThread(object):
         
         self.propagation = Propagation(param,\
             self.__random_states[RandomSeeds.MOBILE_POSITION.value])
+        self.results = Results()
         
         self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
         
@@ -67,8 +69,8 @@ class SimulationThread(object):
 
         self.__grid_R = 0
         
-        self.__x_ms = np.empty(self.__num_ms)
-        self.__y_ms = np.empty(self.__num_ms)
+        self.__x_ms = np.zeros(self.__num_ms)
+        self.__y_ms = np.zeros(self.__num_ms)
         
         self.__bs_ms_x = [[] for k in range(self.topology.num_bs)]
         self.__bs_ms_y = [[] for k in range(self.topology.num_bs)]
@@ -80,6 +82,8 @@ class SimulationThread(object):
         self.run_loop()
 
         # Save results in future releases
+        ax2 = self.results.plot_snir_cdf()
+        plt.show(ax2)
 
     def run_loop(self):
 
@@ -91,10 +95,14 @@ class SimulationThread(object):
 
                 self.create_ms()
                 self.connect_ms_to_bs()
-                self.plot_grid()
-                plt.show()
+                self.select_mss()
+                self.results.add_snir(self.calculate_snir())
+                if(self.param.plot_drop_grid):
+                    ax1 = self.plot_grid()
+                    plt.show(ax1)
 
                 self.reset_state()
+                self.reset_grid()
 
                 drop_number += 1
 
@@ -147,10 +155,11 @@ class SimulationThread(object):
     def select_mss(self):
         for bs in self.__bs_list:
             num_con_mss = len(bs.ms_list)
-            ue_idx = self.__random_states[RandomSeeds.MOBILE_POSITION.value].\
-            randint(0,high=num_con_mss)
-            bs.ms_list[ue_idx].active = True
-            self.__active_mss_idx.append(bs.ms_list[ue_idx].idx)
+            if(num_con_mss > 0):
+                ue_idx = self.__random_states[RandomSeeds.MOBILE_POSITION.value].\
+                randint(0,high=num_con_mss)
+                bs.ms_list[ue_idx].active = True
+                self.__active_mss_idx.append(bs.ms_list[ue_idx].idx)
             
     def calculate_snir(self):
         
@@ -205,6 +214,20 @@ class SimulationThread(object):
             self.__random_states = self.initialize_random_states()
             
         self.propagation.rand_state = self.__random_states[RandomSeeds.MOBILE_POSITION.value]
+        
+    def reset_grid(self):
+        self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
+        
+        self.__ms_list = []
+        
+        self.__active_mss_idx = []
+        
+        self.__x_ms = np.zeros(self.__num_ms)
+        self.__y_ms = np.zeros(self.__num_ms)
+        
+        self.__bs_ms_x = [[] for k in range(self.topology.num_bs)]
+        self.__bs_ms_y = [[] for k in range(self.topology.num_bs)]
+        self.__connected = False
 
 
     @property
@@ -258,4 +281,3 @@ class SimulationThread(object):
     @property
     def active_mss_idx(self):
         return self.__active_mss_idx
-

@@ -54,12 +54,15 @@ class Parameters(object):
 
     # Simulation Seeds
     seeds = np.random.randint(1, set_size, max_num_drops)
+    
+    # Plot grid for each drop
+    plot_drop_grid = True
 
     # Radius of cell [meters]
     cell_radius = 200
     
     # Number of interference layers
-    num_layers = 2
+    num_layers = 1
     
     # Height of Base Stations [meters]
     bs_height = 40

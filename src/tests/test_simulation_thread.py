@@ -118,6 +118,23 @@ class SimulationThreadTest(unittest.TestCase):
         self.assertEqual(len(self.sim_thread_3.active_mss_idx),19)
         self.assertEqual(len(self.sim_thread_3.calculate_snir()),19)
         
+    def test_reset(self):
+        self.sim_thread_3.create_ms()
+        self.sim_thread_3.connect_ms_to_bs()
+        self.sim_thread_3.select_mss()
+        snir = self.sim_thread_3.calculate_snir()
+        self.sim_thread_3.results.add_snir(snir)
+        
+        self.sim_thread_3.reset_grid()
+        
+        self.assertEqual(np.sum(self.sim_thread_3.bs_rx_power),0.0)
+        self.assertEqual(len(self.sim_thread_3.ms_list),0)
+        self.assertEqual(len(self.sim_thread_3.active_mss_idx),0)
+        self.assertEqual(np.sum(self.sim_thread_3.x_ms),0.0)
+        self.assertEqual(np.sum(self.sim_thread_3.y_ms),0.0)
+        self.assertEqual(len(np.ravel(np.array(self.sim_thread_3.bs_ms_x))),0)
+        self.assertEqual(len(np.ravel(np.array(self.sim_thread_3.bs_ms_y))),0)
+        
     def test_plot_grid(self):
         self.sim_thread.create_ms()
         ax = self.sim_thread.plot_grid()
