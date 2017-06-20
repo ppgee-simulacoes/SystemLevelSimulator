@@ -180,17 +180,17 @@ class SimulationThread(object):
 
     def calculate_snir_downlink(self):
         snir_vec_downlink = np.zeros(self.__num_ms)
-        active_mss = []
+        active_bss = []
 
         for ms in self.__ms_list:
             if (len(ms.ms_list) > 0):
-                active_mss.append(ms.idx)
-                rx_pow = self.__ms_rx_power[ms.idx, self.__active_mss_idx[ms.idx]]
-                int_n = np.sum(10 ** (self.__ms_rx_power[ms.idx, self.__active_mss_idx] / 10)) \
+                active_bss.append(ms.idx)
+                rx_pow = self.__ms_rx_power[ms.idx, self.__active_bss_idx[ms.idx]]
+                int_n = np.sum(10 ** (self.__ms_rx_power[ms.idx, self.__active_bss_idx] / 10)) \
                         - 10 ** (rx_pow / 10) + 10 ** (ms.noise / 10)
                 snir_vec_downlink[ms.idx] = rx_pow - 10 * np.log10(int_n)
 
-            return snir_vec_downlink[active_mss]
+            return snir_vec_downlink[active_bss]
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
@@ -300,3 +300,7 @@ class SimulationThread(object):
     @property
     def active_mss_idx(self):
         return self.__active_mss_idx
+
+    @property
+    def active_bss_idx(self):
+        return self.__active_bss_idx
