@@ -62,7 +62,8 @@ class SimulationThread(object):
         self.results = Results()
         
         self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
-        
+        self.__ms_rx_power = np.zeros((self.__num_ms,self.__num_bs))
+
         self.__ms_list = []
         
         self.__active_mss_idx = []
@@ -97,7 +98,8 @@ class SimulationThread(object):
                 self.connect_ms_to_bs()
                 self.select_mss()
                 self.results.add_snir(self.calculate_snir())
-                if(self.param.plot_drop_grid):
+                self.results.add_snir(self.calculate_snir_downlink())
+                if (self.param.plot_drop_grid):
                     ax1 = self.plot_grid()
                     plt.show(ax1)
 
@@ -162,10 +164,10 @@ class SimulationThread(object):
                 self.__active_mss_idx.append(bs.ms_list[ue_idx].idx)
             
     def calculate_snir(self):
-        
+
         snir_vec = np.zeros(self.__num_bs)
         active_bss = []
-        
+
         for bs in self.__bs_list:
             if(len(bs.ms_list) > 0):
                 active_bss.append(bs.idx)
@@ -173,8 +175,22 @@ class SimulationThread(object):
                 int_n = np.sum(10**(self.__bs_rx_power[bs.idx,self.__active_mss_idx]/10))\
                 - 10**(rx_pow/10) + 10**(bs.noise/10)
                 snir_vec[bs.idx] = rx_pow - 10*np.log10(int_n)
-            
+
         return snir_vec[active_bss]
+
+    def calculate_snir_downlink(self):
+        snir_vec_downlink = np.zeros(self.__num_ms)
+        active_mss = []
+
+        for ms in self.__ms_list:
+            if (len(ms.ms_list) > 0):
+                active_mss.append(ms.idx)
+                rx_pow = self.__ms_rx_power[ms.idx, self.__active_mss_idx[ms.idx]]
+                int_n = np.sum(10 ** (self.__ms_rx_power[ms.idx, self.__active_mss_idx] / 10)) \
+                        - 10 ** (rx_pow / 10) + 10 ** (ms.noise / 10)
+                snir_vec_downlink[ms.idx] = rx_pow - 10 * np.log10(int_n)
+
+            return snir_vec_downlink[active_mss]
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
