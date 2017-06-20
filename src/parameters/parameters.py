@@ -45,7 +45,7 @@ class Parameters(object):
     simulation_type = SimType.FIXED_SEEDS
 
     # Maximum Number of Drops
-    max_num_drops = 100
+    max_num_drops = 500
 
     # Set of seeds for Random States
     set_size = 100000
@@ -77,7 +77,7 @@ class Parameters(object):
     bs_power = 40
     
     # Base Station noise spectral density [dBm/Hz]
-    bs_n0 = -150
+    bs_n0 = -500
     
     # Base Station transmit bandwidth [MHz]
     bs_band = 10
@@ -92,7 +92,7 @@ class Parameters(object):
     ms_height = 1.5
     
     # Propagation model
-    propagation_model = PropagationModel.GENERIC
+    propagation_model = PropagationModel.FREESPACE
     
     #General parameters
     # Frequency [MHz]

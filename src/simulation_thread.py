@@ -163,16 +163,22 @@ class SimulationThread(object):
             
     def calculate_snir(self):
         
-        snir_vec = np.zeros(self.__num_bs)
+        snir_vec = np.array([])
         active_bss = []
+        inactive_bs = 0
         
         for bs in self.__bs_list:
             if(len(bs.ms_list) > 0):
-                active_bss.append(bs.idx)
-                rx_pow = self.__bs_rx_power[bs.idx,self.__active_mss_idx[bs.idx]]
-                int_n = np.sum(10**(self.__bs_rx_power[bs.idx,self.__active_mss_idx]/10))\
+                bs_idx = bs.idx - inactive_bs
+                active_bss.append(bs_idx)
+                ms_idx = self.__active_mss_idx[bs_idx]
+                rx_pow = self.__bs_rx_power[bs_idx,ms_idx]
+                int_n = np.sum(10**(self.__bs_rx_power[bs_idx,self.__active_mss_idx]/10))\
                 - 10**(rx_pow/10) + 10**(bs.noise/10)
-                snir_vec[bs.idx] = rx_pow - 10*np.log10(int_n)
+                snir = rx_pow - 10*np.log10(int_n)
+                snir_vec = np.append(snir_vec,snir)
+            else:
+                inactive_bs = inactive_bs + 1
             
         return snir_vec[active_bss]
             
