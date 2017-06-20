@@ -5,7 +5,8 @@ Created on Thu May 25 16:47:46 2017
 @author: Calil
 """
 
-import numpy as np
+from numpy import log10
+from parameters.parameters import Parameters as param
 
 from base_station import BaseStation
 
@@ -33,6 +34,7 @@ class MobileStation(object):
                 
         Version History:
             V. 0.1 (May 25 2017) - create class
+            V. 1.0 (Jun 20 2017) - add noise
     """
     
     def __init__(self,position,power,num):
@@ -41,6 +43,9 @@ class MobileStation(object):
         
         self.__position = position
         self.__tx_power = power
+
+        lin_n0 = 10 ** (param.ms_n0 / 10)
+        self.__noise = 10 * log10(param.ms_band * 1e6 * lin_n0)
         
         self.active = False
         self.__connected_to = None

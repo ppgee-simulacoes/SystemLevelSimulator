@@ -25,6 +25,7 @@ class Parameters(object):
                 
         Version History:
             V. 0.1 (May 18 2017) - create class skeleton
+            V. 1.0 (Jun 20 2017) - add ms_n0 and ms_band
     """
     
     __instance = None
@@ -77,10 +78,16 @@ class Parameters(object):
     bs_power = 40
     
     # Base Station noise spectral density [dBm/Hz]
-    bs_n0 = -150
+    bs_n0 = -500
     
     # Base Station transmit bandwidth [MHz]
     bs_band = 10
+
+    # Mobile Station noise spectral density [dBm/Hz]
+    ms_n0 = -300
+
+    # Base Station transmit bandwidth [MHz]
+    ms_band = bs_band
     
     # Total number of mobile stations
     num_ms = 50

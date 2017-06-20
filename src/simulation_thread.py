@@ -38,7 +38,8 @@ class SimulationThread(object):
                 calil_queiroz@hotmail.com
                 
         Version History:
-            V. 0.1 (May 18 2017) - create class skeleton  
+            V. 0.1 (May 18 2017) - create class skeleton
+            V. 1.0 (Jun 20 2017) - add Downlink SNIR
     """
 
     def __init__(self, param):
