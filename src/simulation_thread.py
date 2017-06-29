@@ -63,7 +63,7 @@ class SimulationThread(object):
         self.results = Results()
         
         self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
-        self.__ms_rx_power = np.zeros((self.__num_ms,self.__num_bs))
+        self.__ms_rx_power = np.zeros((self.__num_bs, self.__num_ms))
 
         self.__ms_list = []
         
@@ -98,8 +98,8 @@ class SimulationThread(object):
                 self.create_ms()
                 self.connect_ms_to_bs()
                 self.select_mss()
-                self.results.add_snir(self.calculate_snir())
-                self.results.add_snir(self.calculate_snir_downlink)
+                #self.results.add_snir(self.calculate_snir())
+                self.results.add_snir(self.calculate_snir_downlink())
                 if (self.param.plot_drop_grid):
                     ax1 = self.plot_grid()
                     plt.show(ax1)
@@ -144,17 +144,20 @@ class SimulationThread(object):
                 dist = np.sqrt(p_vec[0]**2 + p_vec[1]**2)
                 path_loss = self.propagation.propagate(dist)
                 ms_rx_power = bs.tx_power - path_loss
+                self.__ms_rx_power[bs.idx, ms.idx] = ms_rx_power
+                self.__bs_idx = bs.idx
                 bs_rx_power = ms.tx_power - path_loss
                 self.__bs_rx_power[bs.idx,ms.idx] = bs_rx_power
                 if(ms_rx_power > max_pow):
                     max_pow = ms_rx_power
                     bs_to_connect = bs
+                    self.con_bs_idx = bs.idx
             ms.connected_to = bs_to_connect
             bs_to_connect.connect_to(ms)
             self.__bs_ms_x[bs_to_connect.idx].append(ms.position[0])
             self.__bs_ms_y[bs_to_connect.idx].append(ms.position[1])
         self.__connected = True
-        
+
     def select_mss(self):
         for bs in self.__bs_list:
             num_con_mss = len(bs.ms_list)
@@ -185,12 +188,12 @@ class SimulationThread(object):
 
         for ms in self.__ms_list:
             active_mss.append(ms.idx)
-            rx_pow = self.__ms_rx_power[ms.idx]
-            int_n = np.sum(10 ** (self.__ms_rx_power[ms.idx] / 10)) \
+            rx_pow = self.__ms_rx_power[self.con_bs_idx,ms.idx]
+            int_n = np.sum(10 ** (self.__ms_rx_power[self.__bs_idx,ms.idx] / 10)) \
             - 10 ** (rx_pow / 10) + 10 ** (ms.noise / 10)
             snir_vec_downlink[ms.idx] = rx_pow - 10 * np.log10(int_n)
 
-            return snir_vec_downlink[active_mss]
+        return snir_vec_downlink[active_mss]
             
     def plot_grid(self):
         ax = self.topology.plot_topology()
@@ -236,7 +239,8 @@ class SimulationThread(object):
         
     def reset_grid(self):
         self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
-        
+        self.__ms_rx_power = np.zeros((self.__num_bs, self.__num_ms))
+
         self.__ms_list = []
         
         self.__active_mss_idx = []
@@ -296,7 +300,11 @@ class SimulationThread(object):
     @property
     def bs_rx_power(self):
         return self.__bs_rx_power
-    
+
+    @property
+    def ms_rx_power(self):
+        return self.__ms_rx_power
+
     @property
     def active_mss_idx(self):
         return self.__active_mss_idx

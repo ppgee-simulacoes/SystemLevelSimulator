@@ -45,7 +45,7 @@ class MobileStation(object):
         self.__tx_power = power
 
         lin_n0 = 10 ** (param.ms_n0 / 10)
-        self.__noise = 10 * log10(param.ms_band * 1e6 * lin_n0)
+        self.noise = 10 * log10(param.ms_band * 1e6 * lin_n0)
         
         self.active = False
         self.__connected_to = None

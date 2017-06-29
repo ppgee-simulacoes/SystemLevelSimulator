@@ -15,7 +15,7 @@ Created on Tue May 23 17:35:39 2017
 from parameters.parameters import Parameters
 from simulation_thread import SimulationThread
 
-#figs_dir = "figs/"
+figs_dir = "figs/"
 
 param = Parameters()
 sim_thread = SimulationThread(param)
