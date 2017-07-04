@@ -41,8 +41,10 @@ class MobileStation(object):
         self.__rx_power = None
         self.__interference_power = []
 
+        self.__tx_band = tx_band
+
         noise_density = 10**(n0/10)
-        self.__noise = 10 * np.log10(tx_band * noise_density)
+        self.__noise = 10 * np.log10(self.tx_band * noise_density)
 
         self.__connected_bs = None
 
@@ -79,6 +81,10 @@ class MobileStation(object):
     @property
     def interference_power(self):
         return self.__interference_power
+
+    @property
+    def tx_band(self):
+        return self.__tx_band
 
     @property
     def noise(self):

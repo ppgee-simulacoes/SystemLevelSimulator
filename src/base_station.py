@@ -38,7 +38,7 @@ class BaseStation(object):
             V. 0.1 (June 16 2017) - class created
     """
 
-    def __init__(self, position, azimuth, downtilt, power, n0, tx_band, index):
+    def __init__(self, position, azimuth, downtilt, power, n0, tx_band_index, tx_band, index):
 
         self.__index = index
 
@@ -47,8 +47,11 @@ class BaseStation(object):
         self.__downtilt = downtilt
         self.__tx_power = power
 
+        self.__tx_band = tx_band
+        self.__tx_band_index = tx_band_index
+
         noise_density = 10**(n0/10)
-        self.__noise = 10 * np.log10(tx_band * noise_density)
+        self.__noise = 10 * np.log10(self.tx_band * noise_density)
 
         self.__ms_rx_power = []
 
@@ -73,6 +76,10 @@ class BaseStation(object):
         phi_rad = np.arctan2(relative_position[1], relative_position[0])
         phi = np.rad2deg(phi_rad)
         phi -= self.azimuth
+        if phi > 180:
+            phi = phi - 360
+        elif phi < -180:
+            phi = phi + 360
 
         # Get vertical tilt angle
         distance = np.sqrt(relative_position[0] ** 2 + relative_position[1] ** 2)
@@ -123,6 +130,14 @@ class BaseStation(object):
     @property
     def tx_power(self):
         return self.__tx_power
+
+    @property
+    def tx_band(self):
+        return self.__tx_band
+
+    @property
+    def tx_band_index(self):
+        return self.__tx_band_index
 
     @property
     def ms_rx_power(self):

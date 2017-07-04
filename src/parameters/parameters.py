@@ -56,20 +56,20 @@ class Parameters(object):
 
     # TOPOLOGY PARAMETERS
     # Radius of cell [meters]
-    cell_radius = 200
+    cell_radius = 500
     
     # Number of interference layers
-    num_layers = 2
+    num_layers = 1
 
     # Plot grid for each drop
-    plot_drop_grid = False
+    plot_drop_grid = True
 
     # BASE STATION PARAMETERS
     # Height of Base Stations [meters] (between 30 and 200m)
     bs_height = 40
     
     # Base Station azimuth angle [degrees]
-    bs_azimuth = [30, 150, 270]
+    bs_azimuth = [0, 120, 240]
     
     # Base Station down tilt angle [degrees]
     bs_down_tilt = -5
@@ -77,11 +77,15 @@ class Parameters(object):
     # Base Station transmit power [dBm]
     bs_power = 40
 
-    # MS Noise spectral density [dBm/Hz]
+    # BS Noise spectral density [dBm/Hz]
     bs_n0 = -200
 
-    # MS Transmit Bandwidth [Hz]
-    bs_bandwidth = 5e6
+    # BS Transmit Bandwidth [Hz]
+    bs_bandwidth = 6e6
+
+    # Frequency Bands (for frequency reuse)
+    number_of_bands = len(bs_azimuth)
+    frequency_bands = [bs_bandwidth/number_of_bands] * number_of_bands
 
     # MOBILE STATION PARAMETERS
     # Total number of mobile stations
@@ -97,7 +101,7 @@ class Parameters(object):
     ms_n0 = -90
 
     # MS Transmit Bandwidth [Hz]
-    ms_bandwidth = 10e6
+    ms_bandwidth = 5e6
 
     # PROPAGATION PARAMETERS
     # Propagation Model (GENERIC, FREE_SPACE, OKUMURA_COST)
@@ -115,13 +119,13 @@ class Parameters(object):
     pl_d0 = 30
 
     # Shadowing flag
-    shadowing = True
+    shadowing = False
     if shadowing is True:
         # Standard Deviation for Gaussian Variable [dB] (usually between 4 and 13 dB)
         pl_sigma = 3
 
     # Transmission Frequency [Hz]
-    frequency = 300e6
+    frequency = 1.8e6
 
 
 

@@ -98,10 +98,11 @@ class SimulationThread(object):
 
         bs_index = 0
         for bs in range(0, self.num_bs):
-            for azimuth in self.parameters.bs_azimuth:
+            for azimuth_index, azimuth in enumerate(self.parameters.bs_azimuth):
                 self.__bs_list.append(BaseStation(bs_coordinates[bs], azimuth,
                                                   self.parameters.bs_down_tilt, self.parameters.bs_power,
-                                                  self.parameters.bs_n0, self.parameters.bs_bandwidth,
+                                                  self.parameters.bs_n0, azimuth_index,
+                                                  self.parameters.frequency_bands[azimuth_index],
                                                   bs_index))
                 bs_index += 1
 
@@ -219,13 +220,14 @@ class SimulationThread(object):
 
         self.__connected = True
 
-    def get_bs_interference(self):
+    def get_bs_interference(self, bs_band):
 
         # Create vector of interference power from each BS
         interference_power_vector = np.zeros(len(self.bs_list))
         for bs in self.bs_list:
             num_connected_ms = len(bs.connected_ms_list)
-            if num_connected_ms > 0:
+            # Interference occurs only if there are MSs connected to the BS and it is not using the same band
+            if num_connected_ms > 0 and bs.tx_band_index != bs_band:
                 # Choose random connected MS as the active at interference level
                 active_ms_index = self.random_states[RandomSeeds.ACTIVE_MOBILE.value].\
                     randint(0, high=num_connected_ms)
@@ -245,12 +247,12 @@ class SimulationThread(object):
 
         for bs in self.bs_list:
             # Get vector of interference power and delete element corresponding to current BS
-            bs.interference_power = np.delete(self.get_bs_interference(), bs.index)
+            bs.interference_power = np.delete(self.get_bs_interference(bs.tx_band_index), bs.index)
             if bs.connected_ms_list:
                 snir_vector_UL[bs.index] = bs.calculate_snir(self.random_states[RandomSeeds.ACTIVE_MOBILE.value])
 
-        a = np.where(snir_vector_UL == 0)
-        snir_vector_UL = np.delete(snir_vector_UL, a)
+        # Eliminate BSs that are not causing interference
+        snir_vector_UL = np.delete(snir_vector_UL, np.where(snir_vector_UL == 0))
 
         return snir_vector_DL, snir_vector_UL
 
