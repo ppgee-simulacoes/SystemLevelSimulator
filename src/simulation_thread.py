@@ -59,7 +59,7 @@ class SimulationThread(object):
         
         self.propagation = Propagation(param,\
             self.__random_states[RandomSeeds.MOBILE_POSITION.value])
-        self.results = Results()
+        self.results = Results(self.param.tput_loss,self.param.ms_band*1e6)
         
         self.__bs_rx_power = np.zeros((self.__num_bs,self.__num_ms))
         
@@ -84,6 +84,8 @@ class SimulationThread(object):
         # Save results in future releases
         ax2 = self.results.plot_snir_cdf()
         plt.show(ax2)
+        ax3 = self.results.plot_tput()
+        plt.show(ax3)
 
     def run_loop(self):
 

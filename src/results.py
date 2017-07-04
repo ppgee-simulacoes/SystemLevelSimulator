@@ -31,9 +31,11 @@ class Results(object):
             V. 0.1 (Jun 15 2017) - create class 
     """
     
-    def __init__(self):
+    def __init__(self,tput_loss,band):
         
         self.__snir = []
+        self.__tput_loss = tput_loss
+        self.__band = band
         
     def add_snir(self,snir_vec):
         self.__snir.append(snir_vec)
@@ -43,6 +45,22 @@ class Results(object):
         
         ax.set_xlabel("SNIR [dB]")
         ax.set_ylabel("CDF of SNIR")
+        ax.set_xlim([np.min(val),np.max(val)])
+        ax.set_ylim([0,1])
+        ax.xaxis.grid(True)
+        ax.yaxis.grid(True)
+        
+        return ax
+    
+    def plot_tput(self):
+        snir_val = np.ravel(np.array(self.__snir)) - self.__tput_loss
+        snir_val = 10**(snir_val/10)
+        tput = self.__band*np.log2(1 + snir_val)
+        
+        ax, val = self._plot_cdf(tput)
+        
+        ax.set_xlabel("Throughput [bps]")
+        ax.set_ylabel("CDF of Throughput")
         ax.set_xlim([np.min(val),np.max(val)])
         ax.set_ylim([0,1])
         ax.xaxis.grid(True)

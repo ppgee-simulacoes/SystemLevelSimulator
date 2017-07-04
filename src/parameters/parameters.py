@@ -45,7 +45,7 @@ class Parameters(object):
     simulation_type = SimType.FIXED_SEEDS
 
     # Maximum Number of Drops
-    max_num_drops = 500
+    max_num_drops = 1
 
     # Set of seeds for Random States
     set_size = 100000
@@ -59,10 +59,10 @@ class Parameters(object):
     plot_drop_grid = False
 
     # Radius of cell [meters]
-    cell_radius = 200
+    cell_radius = 1000
     
     # Number of interference layers
-    num_layers = 1
+    num_layers = 2
     
     # Height of Base Stations [meters]
     bs_height = 40
@@ -83,13 +83,19 @@ class Parameters(object):
     bs_band = 10
     
     # Total number of mobile stations
-    num_ms = 50
+    num_ms = 200
     
     # Mobile station transmit power
     ms_tx_power = 20
     
     # Height of mobile stations
     ms_height = 1.5
+    
+    # Mobile Station transmit bandwidth [MHz]
+    ms_band = 10
+    
+    # Throughput SNIR loss [dB]
+    tput_loss = 5
     
     # Propagation model
     propagation_model = PropagationModel.FREESPACE

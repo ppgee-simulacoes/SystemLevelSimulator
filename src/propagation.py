@@ -106,7 +106,7 @@ class Propagation(object):
             if(self.__freq_mhz <= 300):
                 a = 8.29*(log10(1.54*self.__hre)**2)-1.1
             else:
-                a = 3.2*(log10(11.75*self.__hre))**2-4.97
+                a = 3.2*(log10(11.75*self.__hre)**2)-4.97
         else:
             a = (1.1*log10(self.__freq_mhz) - 0.7)*self.__hre - \
             (1.56*log10(self.__freq_mhz) - 0.8)
