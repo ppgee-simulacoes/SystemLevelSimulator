@@ -86,6 +86,8 @@ class SimulationThread(object):
         # Save results in future releases
         ax2 = self.results.plot_snir_cdf()
         plt.show(ax2)
+        ax3 = self.results.plot_snir_downlink_cdf()
+        plt.show(ax3)
 
     def run_loop(self):
 
@@ -98,8 +100,8 @@ class SimulationThread(object):
                 self.create_ms()
                 self.connect_ms_to_bs()
                 self.select_mss()
-                #self.results.add_snir(self.calculate_snir())
-                self.results.add_snir(self.calculate_snir_downlink())
+                self.results.add_snir(self.calculate_snir())
+                self.results.add_snir_downlink(self.calculate_snir_downlink())
                 if (self.param.plot_drop_grid):
                     ax1 = self.plot_grid()
                     plt.show(ax1)
@@ -188,8 +190,8 @@ class SimulationThread(object):
 
         for ms in self.__ms_list:
             active_mss.append(ms.idx)
-            rx_pow = self.__ms_rx_power[self.con_bs_idx,ms.idx]
-            int_n = np.sum(10 ** (self.__ms_rx_power[self.__bs_idx,ms.idx] / 10)) \
+            rx_pow = self.__ms_rx_power[ms.connected_to.idx,ms.idx]
+            int_n = np.sum(10 ** (self.__ms_rx_power[:,ms.idx] / 10)) \
             - 10 ** (rx_pow / 10) + 10 ** (ms.noise / 10)
             snir_vec_downlink[ms.idx] = rx_pow - 10 * np.log10(int_n)
 

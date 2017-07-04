@@ -84,7 +84,7 @@ class Parameters(object):
     bs_band = 10
 
     # Mobile Station noise spectral density [dBm/Hz]
-    ms_n0 = -300
+    ms_n0 = -500
 
     # Base Station transmit bandwidth [MHz]
     ms_band = bs_band
@@ -93,13 +93,13 @@ class Parameters(object):
     num_ms = 50
     
     # Mobile station transmit power
-    ms_tx_power = 20
+    ms_tx_power = 40
     
     # Height of mobile stations
     ms_height = 1.5
     
     # Propagation model
-    propagation_model = PropagationModel.GENERIC
+    propagation_model = PropagationModel.FREESPACE
     
     #General parameters
     # Frequency [MHz]

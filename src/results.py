@@ -34,9 +34,13 @@ class Results(object):
     def __init__(self):
         
         self.__snir = []
+        self.__snir_downlink = []
         
     def add_snir(self,snir_vec):
         self.__snir.append(snir_vec)
+
+    def add_snir_downlink(self,snir_vec):
+        self.__snir_downlink.append(snir_vec)
         
     def plot_snir_cdf(self):
         ax, val =  self._plot_cdf(self.__snir)
@@ -49,6 +53,18 @@ class Results(object):
         ax.yaxis.grid(True)
         
         return ax
+
+    def plot_snir_downlink_cdf(self):
+        ax, val = self._plot_cdf(self.__snir_downlink)
+
+        ax.set_xlabel("SNIR [dB]")
+        ax.set_ylabel("CDF of SNIR")
+        ax.set_xlim([np.min(val), np.max(val)])
+        ax.set_ylim([0, 1])
+        ax.xaxis.grid(True)
+        ax.yaxis.grid(True)
+
+        return ax
         
     def _plot_cdf(self,val_list):
         val = np.ravel(np.array(val_list))
@@ -60,6 +76,18 @@ class Results(object):
         
         ax.plot(val,p_val)
         
+        return ax, val
+
+    def _plot_cdf_downlink(self, val_list):
+        val = np.ravel(np.array(val_list))
+        val = np.sort(val)
+        p_val = np.arange(0, len(val)) / len(val)
+
+        fig = plt.figure(figsize=(6, 6))
+        ax = fig.add_subplot(111)
+
+        ax.plot(val, p_val)
+
         return ax, val
         
     def reset(self):
