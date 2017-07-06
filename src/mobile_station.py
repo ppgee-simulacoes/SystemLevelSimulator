@@ -51,12 +51,18 @@ class MobileStation(object):
     def connect_to(self, bs):
         self.__connected_bs = bs
 
-    def calculate_snir(self):
+    def calculate_statistics(self):
+
         interference = 10**(np.asarray(self.interference_power)/10)
         noise = 10**(self.noise/10)
-        snir = self.rx_power - 10*(np.log10(sum(interference) + noise))
+        rx_power = 10**(self.rx_power/10)
 
-        return snir
+        snir = rx_power / (sum(interference) + noise)
+        snir_db = 10 * np.log10(snir)
+
+        throughput = self.tx_band * np.log2(1 + snir)
+
+        return snir_db, throughput
 
     @property
     def index(self):

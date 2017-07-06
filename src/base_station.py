@@ -55,7 +55,8 @@ class BaseStation(object):
 
         self.__ms_rx_power = []
 
-        self.__interference_power = None
+        self.__interference_power = []
+        self.__selected_interference_power = None
         self.__connected_ms_list = []
         
     def connect_to(self, ms):
@@ -95,17 +96,24 @@ class BaseStation(object):
 
         return antenna_gain
 
-    def calculate_snir(self, random_state):
+    def calculate_statistics(self, random_state):
 
         # Get random active MS from list of connected MSs and choose its power as current received power
         active_ms_index = random_state.randint(0, high=len(self.connected_ms_list))
-        rx_power = self.ms_rx_power[active_ms_index]
+        rx_power = 10 ** (self.ms_rx_power[active_ms_index] / 10)
 
-        interference = 10 ** (np.asarray(self.interference_power) / 10)
+        self.selected_interference_power = np.delete(self.selected_interference_power,
+                                                     np.where(self.selected_interference_power == 0))
+
+        interference = 10 ** (self.selected_interference_power / 10)
         noise = 10 ** (self.noise / 10)
-        snir = rx_power - 10 * (np.log10(sum(interference) + noise))
 
-        return snir
+        snir = rx_power / sum(interference) + noise
+        snir_db = 10 * (np.log10(snir))
+
+        throughput = self.tx_band * np.log2(1 + snir)
+
+        return snir_db, throughput
 
     def reset_list(self):
         self.__connected_ms_list = []
@@ -147,9 +155,13 @@ class BaseStation(object):
     def interference_power(self):
         return self.__interference_power
 
-    @interference_power.setter
-    def interference_power(self, interference_power):
-        self.__interference_power = interference_power
+    @property
+    def selected_interference_power(self):
+        return self.__selected_interference_power
+
+    @selected_interference_power.setter
+    def selected_interference_power(self, selected_interference_power):
+        self.__selected_interference_power = selected_interference_power
 
     @property
     def noise(self):

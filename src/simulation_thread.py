@@ -121,9 +121,13 @@ class SimulationThread(object):
         # Perform Loop
         self.run_loop()
         # Save results in future releases
-        snir_dl, snir_up = self.results.plot_snir_cdf()
+        throughput_ul, snir_ul, \
+        throughput_dl, snir_dl = self.results.plot_statistics_cdf()
+
+        plt.show(throughput_dl)
         plt.show(snir_dl)
-        plt.show(snir_up)
+        plt.show(throughput_ul)
+        plt.show(snir_ul)
 
     def run_loop(self):
 
@@ -138,9 +142,9 @@ class SimulationThread(object):
                 # Connects the MSs to each BSs according to the received power
                 self.connect_ms_to_bs()
                 # Get SNIR Vector from current drop
-                snir_vector_DL, snir_vector_UL = self.get_snir()
+                statistics_DL, statistics_UL = self.get_statistics()
                 # Save statistics from current drop
-                self.results.add_snir(snir_vector_DL, snir_vector_UL)
+                self.results.add_statistics(statistics_DL, statistics_UL)
                 # Plots the Simulation Grid
                 if self.parameters.plot_drop_grid:
                     grid = self.plot_grid()
@@ -190,7 +194,10 @@ class SimulationThread(object):
                 distance = np.sqrt(relative_position[0] ** 2 + relative_position[1] ** 2)
 
                 # Calculate antenna gains
-                antenna_gain = bs.calculate_antenna_gain(ms.position)
+                if self.parameters.sectorization:
+                    antenna_gain = bs.calculate_antenna_gain(ms.position)
+                else:
+                    antenna_gain = 0
 
                 # Calculate path loss and received power for different propagation models
                 path_loss = self.path_loss.calculate_path_loss(distance)
@@ -200,6 +207,8 @@ class SimulationThread(object):
                 bs_rx_power = ms.tx_power - path_loss + antenna_gain
 
                 ms.interference_power.append(ms_rx_power)
+
+                bs.interference_power.append(bs_rx_power)
 
                 # Choose BS with maximum received power
                 if ms_rx_power > power_max:
@@ -220,41 +229,49 @@ class SimulationThread(object):
 
         self.__connected = True
 
-    def get_bs_interference(self, bs_band):
+    def get_bs_interference(self, current_bs):
 
         # Create vector of interference power from each BS
         interference_power_vector = np.zeros(len(self.bs_list))
         for bs in self.bs_list:
             num_connected_ms = len(bs.connected_ms_list)
             # Interference occurs only if there are MSs connected to the BS and it is not using the same band
-            if num_connected_ms > 0 and bs.tx_band_index != bs_band:
+            if num_connected_ms > 0 and bs.tx_band_index == current_bs.tx_band_index:
                 # Choose random connected MS as the active at interference level
                 active_ms_index = self.random_states[RandomSeeds.ACTIVE_MOBILE.value].\
                     randint(0, high=num_connected_ms)
-                active_ms_power = bs.ms_rx_power[active_ms_index]
+                active_ms = bs.connected_ms_list[active_ms_index]
+                active_ms_power = current_bs.interference_power[active_ms.index]
                 interference_power_vector[bs.index] = active_ms_power
 
         return interference_power_vector
 
-    def get_snir(self):
+    def get_statistics(self):
 
         snir_vector_DL = np.zeros(self.__num_ms)
+        throughput_DL = np.copy(snir_vector_DL)
         snir_vector_UL = np.zeros(len(self.bs_list))
+        throughput_UL = np.copy(snir_vector_UL)
 
         for ms in self.ms_list:
             # Get SNIR for each MS
-            snir_vector_DL[ms.index] = ms.calculate_snir()
+            snir_vector_DL[ms.index], throughput_DL[ms.index] = ms.calculate_statistics()
 
         for bs in self.bs_list:
             # Get vector of interference power and delete element corresponding to current BS
-            bs.interference_power = np.delete(self.get_bs_interference(bs.tx_band_index), bs.index)
+            bs.selected_interference_power = np.delete(self.get_bs_interference(bs), bs.index)
             if bs.connected_ms_list:
-                snir_vector_UL[bs.index] = bs.calculate_snir(self.random_states[RandomSeeds.ACTIVE_MOBILE.value])
+                snir_vector_UL[bs.index], \
+                throughput_UL[bs.index] = bs.calculate_statistics(self.random_states[RandomSeeds.ACTIVE_MOBILE.value])
 
         # Eliminate BSs that are not causing interference
         snir_vector_UL = np.delete(snir_vector_UL, np.where(snir_vector_UL == 0))
+        throughput_UL = np.delete(throughput_UL, np.where(throughput_UL == 0))
 
-        return snir_vector_DL, snir_vector_UL
+        statistics_DL = snir_vector_DL, throughput_DL
+        statistics_UL = snir_vector_UL, throughput_UL
+
+        return statistics_DL, statistics_UL
 
     def plot_grid(self):
 

@@ -44,7 +44,7 @@ class Parameters(object):
     simulation_type = SimType.FIXED_SEEDS
 
     # Maximum Number of Drops
-    max_num_drops = 10
+    max_num_drops = 20
 
     # Set of seeds for Random States
     set_size = 100000
@@ -59,17 +59,24 @@ class Parameters(object):
     cell_radius = 500
     
     # Number of interference layers
-    num_layers = 1
+    num_layers = 2
 
     # Plot grid for each drop
-    plot_drop_grid = True
+    plot_drop_grid = False
 
     # BASE STATION PARAMETERS
+
     # Height of Base Stations [meters] (between 30 and 200m)
     bs_height = 40
-    
+
+    # Flag for sectorization of cells
+    sectorization = True
+
     # Base Station azimuth angle [degrees]
-    bs_azimuth = [0, 120, 240]
+    if sectorization:
+        bs_azimuth = [0, 120, 240]
+    else:
+        bs_azimuth = [0]
     
     # Base Station down tilt angle [degrees]
     bs_down_tilt = -5
@@ -78,7 +85,7 @@ class Parameters(object):
     bs_power = 40
 
     # BS Noise spectral density [dBm/Hz]
-    bs_n0 = -200
+    bs_n0 = -90
 
     # BS Transmit Bandwidth [Hz]
     bs_bandwidth = 6e6
@@ -105,7 +112,7 @@ class Parameters(object):
 
     # PROPAGATION PARAMETERS
     # Propagation Model (GENERIC, FREE_SPACE, OKUMURA_COST)
-    propagation_model = PropagationModel.GENERIC
+    propagation_model = PropagationModel.FREE_SPACE
     if propagation_model == PropagationModel.OKUMURA_COST:
         propagation_environment = PropagationEnvironment.URBAN
 
