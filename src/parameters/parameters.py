@@ -56,7 +56,7 @@ class Parameters(object):
     seeds = np.random.randint(1, set_size, max_num_drops)
     
     # Plot grid for each drop
-    plot_drop_grid = False
+    plot_drop_grid = True
 
     # Radius of cell [meters]
     cell_radius = 1000

@@ -17,7 +17,7 @@ class ResultsTest(unittest.TestCase):
         
         self.plot_flag = True
         
-        self.results = Results()
+        self.results = Results(0,0)
         
     def test_snir(self):
         self.assertEqual(len(self.results.snir),0)
