@@ -30,8 +30,8 @@ class SimulationThread(object):
             V. 0.1 (May 18 2017) - create class skeleton  
     """
 
-    def __init__(self, param):
+    def __init__(self):
         pass
 
     def simulate(self):
-
+        pass

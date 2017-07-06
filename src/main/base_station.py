@@ -37,7 +37,7 @@ class BaseStation(object):
         self.y_position = y_position
         self.z_position = z_position
         self.tilt_angle = bs_parameters.tilt_angle
-        self.azymuth_angle = bs_parameters.azymuth_angle
+        self.azymuth_angle = bs_parameters.initial_azymuth_angle
         self.transmission_power = bs_parameters.transmission_power
         self.mobile_station_list = []
         self.height = bs_parameters.height

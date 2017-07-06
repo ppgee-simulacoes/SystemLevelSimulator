@@ -47,6 +47,7 @@ for layer in range(hex_grid.layer_number):
 
 window = GraphWin('System Level Simulator', 800, 800)
 
+plt.subplot(1, 1, 1)
 for index in range(len(base_station_list)):
     list_item = base_station_list[index]
     point = Point(list_item.x_position, list_item.y_position)
@@ -55,7 +56,6 @@ for index in range(len(base_station_list)):
     # window.plot(list_item.x_position, list_item.y_position)
 
 
-    plt.subplot(1, 1, 1)
     plt.plot(list_item.x_position, list_item.y_position, u'*')
 
 plt.show()
