@@ -176,7 +176,6 @@ class SimulationThread(object):
             self.__ms_list.append(MobileStation(ms_coordinates,
                                                 self.parameters.ms_power,
                                                 self.parameters.ms_n0,
-                                                self.parameters.ms_bandwidth,
                                                 ms_index))
 
     def connect_ms_to_bs(self):
@@ -206,7 +205,7 @@ class SimulationThread(object):
                 ms_rx_power = bs.tx_power - path_loss + antenna_gain
                 bs_rx_power = ms.tx_power - path_loss + antenna_gain
 
-                ms.interference_power.append(ms_rx_power)
+                ms.interference_power.append((ms_rx_power, bs.tx_band_index))
 
                 bs.interference_power.append(bs_rx_power)
 
@@ -224,8 +223,12 @@ class SimulationThread(object):
 
             # Save Received Power and Interference Power for each MS
             ms.rx_power = power_max
+
             ms.interference_power.sort()
             del ms.interference_power[-1]
+            ms.interference_power = np.asarray(ms.interference_power)
+            ms.interference_power = np.delete(ms.interference_power[:, 0],
+                                              np.where(ms.interference_power[:, 1] != ms.connected_bs.tx_band_index))
 
         self.__connected = True
 

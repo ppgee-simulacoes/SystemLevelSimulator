@@ -30,8 +30,8 @@ class MobileStation(object):
         Version History:
             V. 0.1 (June 16 2017) - class created
     """
-    
-    def __init__(self, position, power, n0, tx_band, index):
+
+    def __init__(self, position, power, n0, index):
 
         self.__index = index
 
@@ -41,15 +41,17 @@ class MobileStation(object):
         self.__rx_power = None
         self.__interference_power = []
 
-        self.__tx_band = tx_band
+        self.__tx_band = None
 
-        noise_density = 10**(n0/10)
-        self.__noise = 10 * np.log10(self.tx_band * noise_density)
+        self.__noise_density = 10**(n0/10)
+        self.__noise = None
 
         self.__connected_bs = None
 
     def connect_to(self, bs):
         self.__connected_bs = bs
+        self.__tx_band = self.__connected_bs.tx_band
+        self.__noise = 10 * np.log10(self.tx_band * self.__noise_density)
 
     def calculate_statistics(self):
 
@@ -87,6 +89,10 @@ class MobileStation(object):
     @property
     def interference_power(self):
         return self.__interference_power
+
+    @interference_power.setter
+    def interference_power(self, interference_power):
+        self.__interference_power = interference_power
 
     @property
     def tx_band(self):

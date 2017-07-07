@@ -70,7 +70,7 @@ class Parameters(object):
     bs_height = 40
 
     # Flag for sectorization of cells
-    sectorization = True
+    sectorization = False
 
     # Base Station azimuth angle [degrees]
     if sectorization:

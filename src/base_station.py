@@ -108,7 +108,7 @@ class BaseStation(object):
         interference = 10 ** (self.selected_interference_power / 10)
         noise = 10 ** (self.noise / 10)
 
-        snir = rx_power / sum(interference) + noise
+        snir = rx_power / (sum(interference) + noise)
         snir_db = 10 * (np.log10(snir))
 
         throughput = self.tx_band * np.log2(1 + snir)
